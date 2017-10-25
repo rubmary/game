@@ -3,22 +3,19 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 #define EPS 1e-3
-void clear_vector(Vector3<double> &v){
+void clear_vector(Vector3<double> &v) {
     v = {0, 0, 0};
 }
 
-double square_magnitude(Vector3<double> v)
-{
+double square_magnitude(Vector3<double> v) {
     return v.x*v.x + v.y*v.y + v.z*v.z;
 }
 
-double magnitude(Vector3<double> v)
-{
+double magnitude(Vector3<double> v) {
     return sqrt(square_magnitude(v));
 }
 
-void normalize(Vector3<double> &v)
-{
+void normalize(Vector3<double> &v) {
     v /= magnitude(v);
 }
 
