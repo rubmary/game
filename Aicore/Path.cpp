@@ -2,7 +2,7 @@
 #include "Path.h"
 using namespace std;
 
-Path::Path(vector<Vector3 <double> >points) : points(points) {
+Path::Path(vector<Vector3 <double> >points = vector<Vector3 <double> >(0)) : points(points) {
 }
 
 double Path::get_param(int segment, Vector3<double> position) {
