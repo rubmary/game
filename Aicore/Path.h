@@ -1,5 +1,5 @@
 #include <vector>
-#include "location.cpp"
+#include "Collision.cpp"
 using namespace std;
 
 class Path {

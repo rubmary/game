@@ -1,10 +1,8 @@
 #include "Engine.h"
 #include <iostream>
 
-Engine::Engine(int w = 800, int h = 800, int m = 20)
-{
-    // Get the screen resolution and create an SFML window and View
-    
+Engine::Engine(int w = 600, int h = 600, int m = 20) {
+// Get the screen resolution and create an SFML window and View
     width  = w;
     height = h;
     margin = m;
@@ -12,6 +10,14 @@ Engine::Engine(int w = 800, int h = 800, int m = 20)
     m_Window.create(VideoMode(width + margin, height + margin),
         "Simple Game Engine",
         Style::Default);
+
+    wall1.setPosition(150, 250);
+    wall2.setPosition(150, 400);
+    wall1.setFillColor(Color(150, 50, 250));
+    // wall2.setFillColor(Color(150, 50, 250));
+    ray.setFillColor(Color(150, 50, 250));
+    ray1.setFillColor(Color(150, 50, 250));
+    ray2.setFillColor(Color(150, 50, 250));
     
     // Load the background into the texture
     // Be sure to scale this image to your screen size
@@ -22,39 +28,10 @@ Engine::Engine(int w = 800, int h = 800, int m = 20)
 
 }
 
-void Engine::input()
-{
-    /////////////////////////////////////////////////////////////////////////
-    /*
-    Event event;
-    while (m_Window.pollEvent(event))
-    {
-        if (event.type == sf::Event::KeyPressed)
-        {
-            if (event.key.code == sf::Keyboard::F5)
-            {
-                // Capturing the window to a sf::Image
-                sf::Image screenshot = m_Window.capture();
-
-
-                // Making the screenshot name
-                std::string screenshotName = "screenshot";
-
-                // Saving to a file
-                screenshot.saveToFile("screenshots/" + screenshotName + ".png");
-            }
-        }
-
-    }
-    */
-    ////////////////////////////////////////////////////////////////////////
-
-
-    // Handle the player quitting
+void Engine::input() {
+// Handle the player quitting
     if (Keyboard::isKeyPressed(Keyboard::Escape))
-    {
         m_Window.close();
-    }
 
     // Handle the player moving
     if (Keyboard::isKeyPressed(Keyboard::A))
@@ -81,7 +58,16 @@ void Engine::input()
 void Engine::update(double time)
 {
     player.update(time);
-    agent.update();    
+    agent.update();
+    ray.setPosition(agent.character.position.x, agent.character.position.z);
+    ray1.setPosition(agent.character.position.x, agent.character.position.z);
+    ray2.setPosition(agent.character.position.x, agent.character.position.z);
+    double ang = atan2(agent.character.velocity.z, agent.character.velocity.x);
+    ang = ang*90/acos(0.0);
+    ang  = ang < 0 ? ang + 360 : ang;
+    ray.setRotation(ang);
+    ray1.setRotation(ang+20);
+    ray2.setRotation(ang-20);
 }
 
 void Engine::draw() {
@@ -91,8 +77,12 @@ void Engine::draw() {
     // Draw the background
     m_Window.draw(m_BackgroundSprite);
     m_Window.draw(player.get_sprite());
-    m_Window.draw(agent.get_sprite());
-    
+    // m_Window.draw(agent.get_sprite());
+    m_Window.draw(wall1);
+    m_Window.draw(wall2);
+    m_Window.draw(ray);
+    m_Window.draw(ray1);
+    m_Window.draw(ray2);
     // Show everything we have just drawn
     m_Window.display();
 }
@@ -100,12 +90,9 @@ void Engine::draw() {
 
 // Kinematic's functions
 
-EngineKinematic::EngineKinematic(int w = 600, int h = 650, int m = 20)
-{
-}
+EngineKinematic::EngineKinematic(int w = 600, int h = 650, int m = 20) { }
 
-void EngineKinematic::kinematic_start(double max_speed)
-{
+void EngineKinematic::kinematic_start(double max_speed) {
     // Kinematic seek
     k_seek.character   = &agent.character;
     k_seek.target      = &player.character.position;
@@ -130,42 +117,36 @@ void EngineKinematic::kinematic_start(double max_speed)
 }
 
 
-void EngineKinematic::kinematic_seek(double time)
-{
+void EngineKinematic::kinematic_seek(double time) {
     SteeringOutput steering;
     k_seek.getSteering(&steering);
     agent.character.Location::integrate(steering, time);
 }
 
-void EngineKinematic::kinematic_flee(double time)
-{
+void EngineKinematic::kinematic_flee(double time) {
     SteeringOutput steering;
     k_flee.getSteering(&steering);
     agent.character.Location::integrate(steering, time);
 }
-void EngineKinematic::kinematic_arrive(double time)
-{
+void EngineKinematic::kinematic_arrive(double time) {
     SteeringOutput steering;
     k_arrive.getSteering(&steering);
     agent.character.Location::integrate(steering, time);
 }
 
-void EngineKinematic::kinematic_wander(double time)
-{
+void EngineKinematic::kinematic_wander(double time) {
     SteeringOutput steering;
     k_wander.getSteering(&steering);
     agent.character.Location::integrate(steering, time);
 }
 
-void EngineKinematic::start()
-{
+void EngineKinematic::start() {
     // Timing   
     Clock clock;
 
     kinematic_start(100);
 
-    while (m_Window.isOpen())
-    {
+    while (m_Window.isOpen()) {
         // Restart the clock and save the elapsed time into dt
         Time dt = clock.restart();
         
@@ -184,14 +165,10 @@ void EngineKinematic::start()
     }
 }
 
-
 // Steering functions
-EngineSteering::EngineSteering(int w = 600, int h = 650, int m = 20)
-{
-}
+EngineSteering::EngineSteering(int w = 600, int h = 650, int m = 20) { }
 
-void EngineSteering::steering_start(double max_acceleration)
-{ 
+void EngineSteering::steering_start(double max_acceleration) { 
     seek.character = &agent.character;
     seek.character -> max_speed = 100;
     seek.target = &player.character.position;
@@ -217,28 +194,34 @@ void EngineSteering::steering_start(double max_acceleration)
     arrive.target_radius = 15;
     arrive.slow_radius = 60;
     arrive.time_to_target = 1;
+
+    obstacle_avoidance.lookahead = 40;
+    obstacle_avoidance.avoid_distance = 40;
+    obstacle_avoidance.collision_detector.walls.resize(1);
+    obstacle_avoidance.collision_detector.walls[0] = {{150, 0, 250}, {500, 0, 250}};
+    // obstacle_avoidance.collision_detector.walls[1] = {{415, 0, 235}, {415, 0, 265}};
+    // obstacle_avoidance.collision_detector.walls[2] = {{415, 0, 265}, {235, 0, 265}};
+    // obstacle_avoidance.collision_detector.walls[3] = {{235, 0, 265}, {235, 0, 235}};
+    // obstacle_avoidance.collision_detector.walls[1] = {{200, 0, 400}, {430, 0, 400}};
+    obstacle_avoidance.max_acceleration = max_acceleration;
 }
 
-void EngineSteering::steering_seek(double time)
-{
+void EngineSteering::steering_seek(double time) {
     SteeringOutput steering;
     seek.getSteering(&steering);
     agent.character.integrate(steering, time);
 }
-void EngineSteering::steering_pursue(double time)
-{
+void EngineSteering::steering_pursue(double time) {
     SteeringOutput steering;
     pursue.getSteering(&steering);
     agent.character.integrate(steering, time);
 }
-void EngineSteering::steering_wander(double time)
-{
+void EngineSteering::steering_wander(double time) {
     SteeringOutput steering;
     wander.getSteering(&steering);
     agent.character.integrate(steering, time);
 }
-void EngineSteering::steering_flee(double time)
-{
+void EngineSteering::steering_flee(double time) {
     SteeringOutput steering;
     flee.getSteering(&steering);
     agent.character.integrate(steering, time);
@@ -250,8 +233,7 @@ void EngineSteering::steering_arrive(double time)
     agent.character.integrate(steering, time);
 }
 
-void EngineSteering::start_seek()
-{
+void EngineSteering::start_seek() {
     Clock clock;
 
     steering_start(200);
@@ -273,8 +255,7 @@ void EngineSteering::start_seek()
     }
 }
 
-void EngineSteering::start_flee()
-{
+void EngineSteering::start_flee() {
     Clock clock;
 
     steering_start(700);
@@ -296,8 +277,7 @@ void EngineSteering::start_flee()
     }
 }
 
-void EngineSteering::start_wander()
-{
+void EngineSteering::start_wander() {
     Clock clock;
 
     steering_start(700);
@@ -320,8 +300,7 @@ void EngineSteering::start_wander()
 }
 
 
-void EngineSteering::start_pursue()
-{
+void EngineSteering::start_pursue() {
     Clock clock;
 
     steering_start(700);
@@ -342,8 +321,7 @@ void EngineSteering::start_pursue()
     }
 }
 
-void EngineSteering::start_arrive()
-{
+void EngineSteering::start_arrive() {
     Clock clock;
 
     steering_start(700);
@@ -393,6 +371,38 @@ void EngineFollowPath::start() {
 
         input();
         steering_follow_path(time);
+        update(time);
+        agent.check_bounders(width, height);
+        player.check_bounders(width, height);
+        draw();
+    }
+}
+
+void EnginePrioritySteering::steering_priority_steering(double time) {
+    SteeringOutput steering;
+    priority_steering.getSteering(&steering);
+    agent.character.integrate(steering, time);
+}
+EnginePrioritySteering::EnginePrioritySteering() { }
+void EnginePrioritySteering::start() {
+    Clock clock;
+
+    steering_start(300);
+    priority_steering.behaviours.resize(2);
+    priority_steering.behaviours[0] = &obstacle_avoidance;
+    priority_steering.behaviours[1] = &seek;
+    priority_steering.character = &agent.character;
+    priority_steering.epsilon = 0.001;
+    while (m_Window.isOpen())
+    {
+        // Restart the clock and save the elapsed time into dt
+        Time dt = clock.restart();
+        
+        // Make a fraction from the delta time
+        double time = dt.asSeconds();
+
+        input();
+        steering_priority_steering(time);
         update(time);
         agent.check_bounders(width, height);
         player.check_bounders(width, height);

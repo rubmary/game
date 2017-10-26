@@ -9,28 +9,24 @@
     orientation += (rotation)*t; \
     orientation = fmod(orientation + PI, 2*PI) - PI;
 
-void Location::integrate(const SteeringOutput& steer, double t)
-{
+void Location::integrate(const SteeringOutput& steer, double t) {
     SIMPLE_INTEGRATION(t, steer.linear, steer.angular);
 }
 
-void Location::set_orientation_from_velocity(const Vector3<double> velocity){
-    
+void Location::set_orientation_from_velocity(const Vector3<double> velocity) {
     // Check if we have a velocity
     if (square_magnitude(velocity) > 0) {
         orientation = atan2(velocity.x, velocity.z);
     }
 }
 
-Vector3<double> Location::get_orientation_as_vector()
-{
+Vector3<double> Location::get_orientation_as_vector() {
     return {sin(orientation), 0, cos(orientation)};   
 }
 
 
 // Kinematic's function
-void Kinematic::integrate(double t)
-{
+void Kinematic::integrate(double t) {
     SIMPLE_INTEGRATION(t, velocity, rotation);
 }
 
@@ -46,8 +42,7 @@ void Kinematic::integrate(const SteeringOutput& steer, double t)
 }
 
 
-void Kinematic::integrate(const SteeringOutput& steer, double drag, double t)
-{
+void Kinematic::integrate(const SteeringOutput& steer, double drag, double t) {
     SIMPLE_INTEGRATION(t, velocity, rotation);
 
     drag = pow(drag, t);
@@ -59,8 +54,7 @@ void Kinematic::integrate(const SteeringOutput& steer, double drag, double t)
 
 void Kinematic::integrate(const SteeringOutput& steer, 
                           const SteeringOutput& drag, 
-                          double t)
-{
+                          double t) {
     SIMPLE_INTEGRATION(t, velocity, rotation);
     velocity.x *= pow(drag.linear.x, t);
     velocity.y *= pow(drag.linear.y, t);
@@ -70,27 +64,23 @@ void Kinematic::integrate(const SteeringOutput& steer,
     velocity += steer.linear*t;
     rotation += steer.angular*t;
 }
-void Kinematic::operator += (const Kinematic& other)
-{
+void Kinematic::operator += (const Kinematic& other) {
     position += other.position;
     velocity += other.velocity;
     rotation += other.rotation;
     orientation += other.orientation; 
 }
 
-void Kinematic::operator -= (const Kinematic& other)
-{
+void Kinematic::operator -= (const Kinematic& other) {
     position -= other.position;
     velocity -= other.velocity;
     rotation -= other.rotation;
     orientation -= other.orientation; 
 }
 
-void Kinematic::operator *= (double f){
+void Kinematic::operator *= (double f) {
     position *= f;
     velocity *= f;
     rotation *= f;
     orientation *= f;
 }
-
-

@@ -6,7 +6,8 @@ int main()
     EngineKinematic engine_kinematic;
     EngineSteering engine;
     EngineFollowPath engine_path;
-    engine_path.start();
+    EnginePrioritySteering engine_ps;
+    // engine_path.start();
     // EngineSteering engine_steering;
     //Start the engine
     // engine.start_seek();
@@ -14,6 +15,7 @@ int main()
     // engine.start_arrive();
     // engine.start_pursue();
     // engine.start_wander();
+    engine_ps.start();
     // Quit in the usual way when the engine is stopped
     return 0;
 }

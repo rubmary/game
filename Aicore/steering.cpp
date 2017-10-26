@@ -2,7 +2,6 @@
 
 void Seek::getSteering(SteeringOutput* output) {
     output -> linear = (*target) - (character -> position);
-
     if (square_magnitude(output -> linear) > 0)
     {
         normalize(output -> linear);
@@ -52,14 +51,12 @@ void Pursue::getSteering(SteeringOutput* output) {
     double distance = magnitude(direction);
     double speed = magnitude(character -> velocity);
     double prediction;
-    // std::cout << max_prediction << std::endl;
     if(speed <= distance / max_prediction)
         prediction = max_prediction;
     else
         prediction = distance / speed;
     *target = direction + (character -> velocity) * prediction;
     Seek::getSteering(output);
-    // std::cout << "Estoy en Pursue" <<std::endl;
 }
 
 
@@ -92,35 +89,6 @@ void Wander::getSteering(SteeringOutput* output) {
     Seek::getSteering(output);
 }
 
-void Separation::getSteering(SteeringOutput* output) {
-    std::vector<Vector3<double> >::iterator t;
-    for (t = targets.begin(); t != targets.end(); t++) {
-        Vector3<double> direction = (*t) - (character->position);
-        double distance = square_magnitude(direction);
-        if (distance < threshold) {
-            double strength = std::min(decay_coefficient/(distance*distance),max_acceleration);
-            normalize(direction);
-            output->linear += (strength * direction);
-        }
-    }
-}
-
-void PrioritySteering::getSteering(SteeringOutput* output) {
-    double epSquared = epsilon*epsilon;
-
-    (*output).clear();
-    std::vector<SteeringBehaviour*>::iterator b;
-    for (b = behaviours.begin(); b != behaviours.end(); b++) {
-        (*b)->character = character;
-        (*b)->getSteering(output);
-        if (square_magnitude((output->linear)) > epSquared) {
-            lastUsed = *b;
-            return;
-        }
-    }
-
-}
-
 FollowPath::FollowPath(Path path = vector<Vector3<double> >(0), double path_offset = 0.1)
     : path(path), path_offset(path_offset) {
     segment = 0;
@@ -140,4 +108,44 @@ void FollowPath::getSteering(SteeringOutput* output) {
     }
     *target = path.get_position(segment, target_param);
     Seek::getSteering(output);
+}
+
+ObstacleAvoidance::ObstacleAvoidance() {
+    target = new Vector3 <double> {0, 0, 0};
+}
+void ObstacleAvoidance::getSteering(SteeringOutput* output) {
+    Vector3 <double> ray = character -> velocity;
+    ray = ray / magnitude(ray);
+    ray *= lookahead;
+    int coll = collision_detector.collide(character -> position, ray);
+    if(coll == -1)
+        return;
+    Collision collision = collision_detector.get_collision(character -> position, ray, coll);
+    *target = collision.position + collision.normal*avoid_distance;
+    Seek::getSteering(output);
+}
+
+void Separation::getSteering(SteeringOutput* output) {
+    std::vector<Vector3<double> >::iterator t;
+    for (t = targets.begin(); t != targets.end(); t++) {
+        Vector3<double> direction = (*t) - (character -> position);
+        double distance = square_magnitude(direction);
+        if (distance < threshold) {
+            double strength = std::min(decay_coefficient/(distance*distance),max_acceleration);
+            normalize(direction);
+            output->linear += (strength * direction);
+        }
+    }
+}
+
+void PrioritySteering::getSteering(SteeringOutput* output) {
+
+    (*output).clear();
+    int n = behaviours.size();
+    for (int i = 0; i < n; i++) {
+        behaviours[i] -> character = character;
+        behaviours[i] -> getSteering(output);
+        if (square_magnitude((output->linear)) > epsilon)
+            return;
+    }
 }

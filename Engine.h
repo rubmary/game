@@ -2,8 +2,7 @@
 #include "include.h"
 using namespace sf;
 
-class Engine
-{
+class Engine {
 public:
     
     // A regular RenderWindow
@@ -17,8 +16,17 @@ public:
     
     // Agents
     Agent agent   = Agent(200, 0, 200, 10);
-    Player player = Player(100, 0, 200, 400);        
+    Player player = Player(250, 0, 250, 400);        
     
+    // Walls
+    RectangleShape wall1 = RectangleShape(Vector2f(350, 1));
+    RectangleShape wall2 = RectangleShape(Vector2f(150, 1));
+
+    // Rays
+    RectangleShape ray  = RectangleShape(Vector2f(30, 1));
+    RectangleShape ray1 = RectangleShape(Vector2f(30, 1));
+    RectangleShape ray2 = RectangleShape(Vector2f(30, 1));
+
     void input();
     
     void update(double time);
@@ -29,8 +37,7 @@ public:
     Engine(int width, int height, int margin);
 };
 
-class EngineKinematic : public Engine
-{  
+class EngineKinematic : public Engine {  
     // Kinematics
     KinematicSeek   k_seek;
     KinematicFlee   k_flee;
@@ -54,17 +61,17 @@ public:
 
 };
 
-class EngineSteering : public Engine
-{  
+class EngineSteering : public Engine {  
     // Steerings
+public:
     Seek seek;
     Pursue pursue;
     Wander wander;
     Flee flee;
     Arrive arrive;
     Separation separation;
+    ObstacleAvoidance obstacle_avoidance;
 
-public:
     EngineSteering(int width, int height, int margin);
     // Kinematic's behaviors
     void steering_start(double max_speed);
@@ -90,11 +97,18 @@ public:
     void start_wander();
 };
 
-class EngineFollowPath : public Engine 
-{
+class EngineFollowPath : public Engine  {
     FollowPath follow_path;
 public:
     EngineFollowPath();
     void start();
     void steering_follow_path(double time);
+};
+
+class EnginePrioritySteering : public EngineSteering {
+    PrioritySteering priority_steering;
+public:
+    EnginePrioritySteering();
+    void start();
+    void steering_priority_steering(double time);
 };

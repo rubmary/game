@@ -1,22 +1,19 @@
 #include "kinematic.cpp"
 
-class SteeringBehaviour
-{
+class SteeringBehaviour {
 public:
     Kinematic *character;
     virtual void getSteering(SteeringOutput* output) = 0;
 };
 
-class Seek : public SteeringBehaviour
-{
+class Seek : public SteeringBehaviour {
 public:
     Vector3<double> *target;
     double max_acceleration;
     virtual void getSteering(SteeringOutput* output);
 };
 
-class Arrive : public Seek
-{
+class Arrive : public Seek {
 public:
     double max_speed;
     double target_radius;
@@ -25,8 +22,7 @@ public:
     virtual void getSteering(SteeringOutput* output);
 };
 
-class Pursue : public Seek
-{
+class Pursue : public Seek {
 public:
     double max_prediction;
     Vector3<double> *pursue_target;
@@ -39,23 +35,20 @@ public:
     virtual void getSteering(SteeringOutput* output);
 };
 
-class SeekWithInternalTarget : public Seek
-{
+class SeekWithInternalTarget : public Seek {
 protected:
     Vector3<double> internal_target;
     SeekWithInternalTarget();
 };
 
-class Wander : public SeekWithInternalTarget
-{
+class Wander : public SeekWithInternalTarget {
 public:
     double volatility;
     double turn_Speed;
     virtual void getSteering(SteeringOutput* output);
 };
 
-class Separation : SteeringBehaviour
-{
+class Separation : SteeringBehaviour {
 public:
     std::vector< Vector3<double> > targets;
     double threshold;
@@ -64,22 +57,27 @@ public:
     virtual void getSteering(SteeringOutput* output);
 };
 
-class PrioritySteering : public SteeringBehaviour
-{
-public:
-    std::vector<SteeringBehaviour*> behaviours;
-    SteeringBehaviour* lastUsed;
-    double epsilon;
-    virtual void getSteering(SteeringOutput* output);
-};
-
-
-class FollowPath : public Seek
-{
+class FollowPath : public Seek {
 public:
     Path path;
     double path_offset;
     int segment;
     FollowPath(Path path, double path_offset);
+    virtual void getSteering(SteeringOutput* output);
+};
+
+class ObstacleAvoidance : public Seek {
+public:
+    ObstacleAvoidance();
+    CollisionDetector collision_detector;
+    double lookahead;
+    double avoid_distance;
+    virtual void getSteering(SteeringOutput* output);
+};
+
+class PrioritySteering : public SteeringBehaviour {
+public:
+    std::vector<SteeringBehaviour*> behaviours;
+    double epsilon;
     virtual void getSteering(SteeringOutput* output);
 };
