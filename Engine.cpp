@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include <iostream>
 
-Engine::Engine(int w = 600, int h = 600, int m = 20) {
+Engine::Engine(int w = 1300, int h =700, int m = 20) {
 // Get the screen resolution and create an SFML window and View
     width  = w;
     height = h;
