@@ -119,3 +119,11 @@ Vector3 <double> normal(Vector3 <double> A,  Vector3<double> B, Vector3 <double>
         n = -n;
     return n;
 }
+
+bool inside(Vector3<double> A, Vector3<double> B, Vector3<double> C, Vector3<double> P) {
+    if ( ((C-A)*(P-A))*((P-A)*(B-A)) < 0 )
+        return false;
+    if ( ((C-B)*(P-B))*((P-B)*(A-B)) < 0 )
+        return false;
+    return true;
+}
