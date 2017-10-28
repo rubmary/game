@@ -10,12 +10,41 @@ struct Edge {
     bool valid;
     vector <int> nodes;
     vector<int> get_differents_nodes(int u);
+    bool operator < (const Edge &e) const {
+        Edge e1 = {A, B, valid}, e2 = e;
+        if (e1.B < e1.A)
+            swap(e1.B, e1.A);
+        if (e2.B < e2.A)
+            swap(e2.B, e2.A);
+        pair < pair <double, double>, pair <double, double> > s1 = {e1.A, e1.B}, s2 = {e2.A, e2.B};
+        return s1 < s2;
+    }
+
+    bool operator == (const Edge &e) const {
+        Edge e1 = {A, B, valid}, e2 = e;
+        if (e1.B < e1.A)
+            swap(e1.B, e1.A);
+        if (e2.B < e2.A)
+            swap(e2.B, e2.A);
+        pair < pair <double, double>, pair <double, double> > s1 = {e1.A, e1.B}, s2 = {e2.A, e2.B};
+        return s1 == s2;
+    }
 };
 
 struct Triangle{
     Edge *a, *b, *c;
     bool is_inside(Vector3 <double> position);
     vector < Vector3<double> > get_vertices();
+    bool not_degenerate();
+    bool operator == (Triangle t) {
+        vector < Vector3<double> > V1 = get_vertices(), V2 = t.get_vertices();
+        vector < pair <double, double> > v1(3), v2(3);
+        for (int i = 0; i < 3; i++) {
+            v1[i] = {V1[i].x, V1[i].z};
+            v2[i] = {V2[i].x, V2[i].z};
+        }
+        return v1 == v2;
+    }
 };
 
 struct NodeRecord {
@@ -46,4 +75,6 @@ public:
     Path find_path(Vector3 <double> start, Vector3<double> end);
     vector<int> A_star(int start, int end);
     double h(int i, int j);
+    int get_size();
+    Triangle get_node(int i);
 };

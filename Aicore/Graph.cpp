@@ -32,10 +32,21 @@ vector < Vector3<double> > Triangle::get_vertices() {
     vertices.insert((b->B));
     vertices.insert((c->B));
     vector <pair <double, double> > V0(vertices.begin(), vertices.end());
-    vector < Vector3<double> > V;
+    vector < Vector3<double> > V(3);
     for (int i = 0; i < 3; i++)
         V[i] = {V0[i].first, 0, V0[i].second};
     return V;
+}
+
+bool Triangle::not_degenerate() {
+    vector < Vector3<double> > V = get_vertices();
+    if (collinear(V[0], V[1], V[0], V[2]))
+        return false;
+    for (int i = 0; i < 3; i++) {
+        if (magnitude(V[i] - V[(i+1)%3]) < 0.5)
+            return false;
+    }
+    return true;
 }
 
 bool is_triangle(Edge a, Edge b, Edge c) {
@@ -49,8 +60,13 @@ bool is_triangle(Edge a, Edge b, Edge c) {
     return vertices.size() == 3;
 }
 
-Graph::Graph(vector <Edge>E) : E(E) {
+Graph::Graph(vector <Edge>edges) {
+    meshes.clear();
+    E = edges;
+    sort(E.begin(), E.end());
+    E.resize(distance(E.begin(), unique(E.begin(), E.end())));
     int M = E.size();
+    cout << M << endl;
     n = 0;
     for (int i = 0; i < M; i++) {
         for (int j = i + 1; j < M; j++) {
@@ -60,9 +76,18 @@ Graph::Graph(vector <Edge>E) : E(E) {
                     E[i].nodes.push_back(n);
                     E[j].nodes.push_back(n);
                     E[k].nodes.push_back(n);
-                    n++;
+                    if (triangle.not_degenerate()) {
+                        meshes.push_back(triangle);
+                        n++;
+                    }
                 }
             }
+        }
+    }
+    for (int i = 0; i < n; i++){
+        for (int j = i+1; j < n; j++) {
+            if (meshes[i] == meshes[j])
+                cout << "Los tringulos: " << i << " y " << j << " son iguales" << endl;
         }
     }
 }
@@ -96,17 +121,19 @@ int Graph::node(Vector3<double> pos) {
     return -1;
 }
 void Graph::calculate_positions() {
+    positions.resize(n);
     for (int i = 0; i < n; i++) {
         vector <Vector3<double> > vertices = meshes[i].get_vertices();
         positions[i] = {0, 0, 0};
         for (int k = 0; k < 3; k++) {
-            positions[i].x += vertices[i].x;
-            positions[i].y += vertices[i].y;
-            positions[i].z += vertices[i].z;
+            positions[i].x += vertices[k].x;
+            positions[i].y += vertices[k].y;
+            positions[i].z += vertices[k].z;
         }
         positions[i] /= 3.0;
     }
 };
+
 Vector3 <double> Graph::position(int i) {
     return positions[i];
 }
@@ -170,4 +197,19 @@ vector<int> Graph::A_star(int start, int end){
     }
 
     return path;
+}
+int Graph::get_size() {
+    return n;
+}
+
+Triangle Graph::get_node(int i) {
+    cout << "Node: " << i << endl;
+    cout << (((meshes[i].a) -> A).first - 4)/2 << ' ' << (((meshes[i].a) -> A).second - 4)/2 << '\t';
+    cout << (((meshes[i].a) -> B).first - 4)/2 << ' ' << (((meshes[i].a) -> B).second - 4)/2 << endl;
+    cout << (((meshes[i].b) -> A).first - 4)/2 << ' ' << (((meshes[i].b) -> A).second - 4)/2 << '\t';
+    cout << (((meshes[i].b) -> B).first - 4)/2 << ' ' << (((meshes[i].b) -> B).second - 4)/2 << endl;
+    cout << (((meshes[i].c) -> A).first - 4)/2 << ' ' << (((meshes[i].c) -> A).second - 4)/2 << '\t';
+    cout << (((meshes[i].c) -> B).first - 4)/2 << ' ' << (((meshes[i].c) -> B).second - 4)/2 << endl;
+    cout << "Centroid: " << (positions[i].x - 4)/2 << ' ' << (positions[i].z - 4)/2 << endl;
+    return meshes[i];
 }
