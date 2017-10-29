@@ -72,17 +72,6 @@ public:
 
 /**
  *
- * Realiza multiples acciones
- *
- **/
-class MultipleActionsAction : public Action {
-public:
-    vector <Action*> actions;
-    void execute();
-};
-
-/**
- *
  * Acciones que utilizan steering behavior
  * utilizadas en los estados
  *
@@ -91,5 +80,16 @@ class SteeringBehaviorAction : public Action {
 public:
     SteeringBehaviour steering_behavior;
     double *time;
+    void execute();
+};
+
+/**
+ *
+ * Realiza multiples acciones
+ *
+ **/
+class MultipleActionsAction : public Action {
+public:
+    vector <Action*> actions;
     void execute();
 };

@@ -27,13 +27,14 @@ void FindBestPath::execute() {
     follow_path -> segment = 0;
 }
 
-void MultipleActionsAction::execute() {
-    for (int i = 0; i < (int) actions.size(); i++)
-        actions[i] -> execute();
-}
 
 void SteeringBehaviorAction::execute() {
     SteeringOutput steering;
     steering_behavior.getSteering(&steering);
     (steering_behavior.character) -> integrate(steering, *time);
+}
+
+void MultipleActionsAction::execute() {
+    for (int i = 0; i < (int) actions.size(); i++)
+        actions[i] -> execute();
 }
