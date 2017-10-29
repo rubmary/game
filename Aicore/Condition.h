@@ -96,7 +96,7 @@ public:
  * Utilizado para decidir si un agente puede
  * ver su objetivo, condiciones:
  *
- * g) encontro moneda
+ * g) encontrar moneda
  * k) ver el jugador
  *
  **/
@@ -104,8 +104,7 @@ public:
 class SeeTargetCondition : public Condition {
 public:
     Vector3 <double> *target;
-    Kinematic *character;
-    bool test(){
-        return true;
-    }
+    Location *character;
+    double *lookahead;
+    bool test();
 };

@@ -129,3 +129,9 @@ bool inside(Vector3<double> A, Vector3<double> B, Vector3<double> C, Vector3<dou
         return false;
     return true;
 }
+
+
+
+bool inside_arch(Vector3<double> A, Vector3 <double> B, Vector3 <double> C,  Vector3 <double> P) {
+    return ((C-B)*(P-B))*((P-B)*(A-B)) > 0;
+}
