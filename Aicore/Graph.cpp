@@ -10,7 +10,7 @@ using namespace std;
 
 vector<int> Edge::get_differents_nodes(int u){
     if (!valid)
-        vector<int>(0);
+        return vector<int>(0);
     vector <int> diff_nodes;
     for (int i = 0; i < nodes.size(); i++)
         if (nodes[i] != u)
@@ -20,6 +20,7 @@ vector<int> Edge::get_differents_nodes(int u){
 
 bool Triangle::is_inside(Vector3<double> pos) {
     vector <Vector3 <double> > vertices = get_vertices();
+    // cout << "is_inside" << endl;
     return inside(vertices[0], vertices[1], vertices[2], pos);
 }
 

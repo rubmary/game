@@ -1,5 +1,5 @@
 //#pragma once
-#include "steering.cpp"
+#include "StateMachine.cpp"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;

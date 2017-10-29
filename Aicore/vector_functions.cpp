@@ -125,5 +125,7 @@ bool inside(Vector3<double> A, Vector3<double> B, Vector3<double> C, Vector3<dou
         return false;
     if ( ((C-B)*(P-B))*((P-B)*(A-B)) < 0 )
         return false;
+    if ( ((A-C)*(P-C))*((P-C)*(B-C)) < 0 )
+        return false;
     return true;
 }

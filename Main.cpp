@@ -72,6 +72,25 @@ int main() {
     for (int i = 0; i < n; i++)
         window.draw(centroids[i]);
 
+    cout << "Finding path..." << endl;
+    Path path = graph.find_path({4, 0, 704}, {64, 0, 64});
+    int M = path.points.size();
+
+    vector <RectangleShape> P(M);
+    for (int i = 1; i < M; i++) {
+        Vector3 <double> A = path.points[i-1], B = path.points[i];
+        P[i-1] = get_shape({(float)A.x, (float)A.z}, {(float)B.x, (float)B.z}, Color::White);
+    }
+
+    for (int i = 0; i < N; i++)
+        window.draw(shape[i]);
+    
+    for (int i = 0; i < n; i++)
+        window.draw(centroids[i]);
+
+    for (int i = 0; i < M-1; i++)
+        window.draw(P[i]);
+
     while (window.isOpen()) {
         if (Keyboard::isKeyPressed(Keyboard::Escape))
             window.close();
