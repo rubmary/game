@@ -41,6 +41,10 @@ Vector3<double> point_on_segment(Vector3<double> a, Vector3<double> b, double t)
     return a + (b - a)*t;
 }
 
+double distance_point_segment(Vector3 <double> a, Vector3<double> b, Vector3<double> p) {
+    return magnitude(point_on_segment(a, b, proj_segment(a, b, p)) - p);
+}
+
 bool parallels (Vector3<double> a, Vector3<double> b,  Vector3<double> c, Vector3<double> d ) {
     return abs((b-a)*(d-c)) < EPS;
 }

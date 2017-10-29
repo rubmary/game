@@ -1,5 +1,8 @@
 #include "steering.h"
 
+void SteeringBehaviour::getSteering(SteeringOutput* output) {
+    return;
+}
 void Seek::getSteering(SteeringOutput* output) {
     output -> linear = (*target) - (character -> position);
     if (square_magnitude(output -> linear) > 0)
@@ -103,8 +106,8 @@ void FollowPath::getSteering(SteeringOutput* output) {
         target_param = 0;
     }
     if (segment == path.points.size() - 1) {
-        segment--;
-        target_param = 1;
+        end_path = true;
+        return;
     }
     *target = path.get_position(segment, target_param);
     Seek::getSteering(output);

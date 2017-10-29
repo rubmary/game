@@ -73,6 +73,7 @@ public:
     int node(int previous, Vector3 <double> position);
     int node(Vector3<double> pos);
     Path find_path(Vector3 <double> start, Vector3<double> end);
+    Path find_path(int start, int end);
     vector<int> A_star(int start, int end);
     double h(int i, int j);
     int get_size();

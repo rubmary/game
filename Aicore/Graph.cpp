@@ -141,7 +141,11 @@ Vector3 <double> Graph::position(int i) {
 
 Path Graph::find_path(Vector3 <double> start, Vector3<double> end) {
     int A = node(start), B = node(end);
-    vector <int> nodes = A_star(A, B);
+    return find_path(A, B);
+}
+
+Path Graph::find_path(int start, int end) {
+    vector <int> nodes = A_star(start, end);
     int len = nodes.size();
     vector < Vector3 <double> > points(len);
     for (int i = 0; i < len; i++)
@@ -149,7 +153,6 @@ Path Graph::find_path(Vector3 <double> start, Vector3<double> end) {
     Path path(points);
     return path;
 }
-
 double Graph::h(int i, int j) {
     return magnitude(position(i) - position(j));
 }

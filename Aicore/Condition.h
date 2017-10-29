@@ -1,22 +1,43 @@
 #include "steering.cpp"
 
+/**
+ *
+ * Clase base para las condiciones
+ *
+ **/
 class Condition {
 public:
     virtual bool test() = 0;
 };
 
+
+/**
+ *
+ * Conjuncion de condiciones
+ *
+ **/
 class AndCondition : public Condition {
 public:
     Condition *condition1, *condition2;
     bool test();
 };
 
+/**
+ *
+ * Disyuncion de condiciones
+ *
+ **/
 class OrCondition : public Condition {
 public:
     Condition *condition1, *condition2;
     bool test();
 };
 
+/**
+ *
+ * Negacion de una condicion
+ *
+ **/
 class NotCondition : public Condition {
 public:
     Condition *condition;

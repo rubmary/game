@@ -3,7 +3,7 @@
 class SteeringBehaviour {
 public:
     Kinematic *character;
-    virtual void getSteering(SteeringOutput* output) = 0;
+    virtual void getSteering(SteeringOutput* output);
 };
 
 class Seek : public SteeringBehaviour {
@@ -62,6 +62,7 @@ public:
     Path path;
     double path_offset;
     int segment;
+    double end_path;
     FollowPath(Path path, double path_offset);
     virtual void getSteering(SteeringOutput* output);
 };
