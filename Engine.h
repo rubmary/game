@@ -37,30 +37,6 @@ public:
     Engine(int width, int height, int margin);
 };
 
-class EngineKinematic : public Engine {  
-    // Kinematics
-    KinematicSeek   k_seek;
-    KinematicFlee   k_flee;
-    KinematicArrive k_arrive;
-    KinematicWander k_wander;
-
-public:
-    EngineKinematic(int width, int height, int margin);
-    // Kinematic's behaviors
-    void kinematic_start(double max_speed);
-
-    void kinematic_seek(double time);
-
-    void kinematic_flee(double time);
-
-    void kinematic_arrive(double time);
-
-    void kinematic_wander(double time);
-
-    void start();
-
-};
-
 class EngineSteering : public Engine {  
     // Steerings
 public:
@@ -75,26 +51,6 @@ public:
     EngineSteering(int width, int height, int margin);
     // Kinematic's behaviors
     void steering_start(double max_speed);
-
-    void steering_seek(double time);
-
-    void steering_flee(double time);
-
-    void steering_pursue(double time);
-
-    void steering_arrive(double time);
-
-    void steering_wander(double time);
-
-    void start_seek();
-
-    void start_flee();
-
-    void start_pursue();
-
-    void start_arrive();
-
-    void start_wander();
 };
 
 class EngineFollowPath : public Engine  {

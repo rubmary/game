@@ -25,10 +25,6 @@ Vector3<double> Location::get_orientation_as_vector() {
 }
 
 
-// Kinematic's function
-void Kinematic::integrate(double t) {
-    SIMPLE_INTEGRATION(t, velocity, rotation);
-}
 
 void Kinematic::integrate(const SteeringOutput& steer, double t)
 {
@@ -39,48 +35,4 @@ void Kinematic::integrate(const SteeringOutput& steer, double t)
         velocity *= max_speed;
     }
     rotation += steer.angular*t;
-}
-
-
-void Kinematic::integrate(const SteeringOutput& steer, double drag, double t) {
-    SIMPLE_INTEGRATION(t, velocity, rotation);
-
-    drag = pow(drag, t);
-    velocity *= drag;
-    rotation *= drag;
-    velocity += steer.linear*t;
-    rotation += steer.angular*t;
-}
-
-void Kinematic::integrate(const SteeringOutput& steer, 
-                          const SteeringOutput& drag, 
-                          double t) {
-    SIMPLE_INTEGRATION(t, velocity, rotation);
-    velocity.x *= pow(drag.linear.x, t);
-    velocity.y *= pow(drag.linear.y, t);
-    velocity.z *= pow(drag.linear.z, t);
-    rotation   *= pow(drag.angular,  t);
-
-    velocity += steer.linear*t;
-    rotation += steer.angular*t;
-}
-void Kinematic::operator += (const Kinematic& other) {
-    position += other.position;
-    velocity += other.velocity;
-    rotation += other.rotation;
-    orientation += other.orientation; 
-}
-
-void Kinematic::operator -= (const Kinematic& other) {
-    position -= other.position;
-    velocity -= other.velocity;
-    rotation -= other.rotation;
-    orientation -= other.orientation; 
-}
-
-void Kinematic::operator *= (double f) {
-    position *= f;
-    velocity *= f;
-    rotation *= f;
-    orientation *= f;
 }
