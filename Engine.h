@@ -90,7 +90,12 @@ public:
     SteeringBehaviorAction find_coin;
     SteeringBehaviorAction follow_player;
     FindBestPath calculate_path;
+    Action none;
     
+    // Instancias de estados
+    State finding_coin;
+    State seeking_player;
+
     Agent coin;
     Graph graph;
     bool exist_coin = false;

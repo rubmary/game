@@ -249,6 +249,11 @@ EngineTest::EngineTest(vector <Wall> W) {
     calculate_path.graph = &graph;
     calculate_path.target = &coin.character.position;
     
+    // Inicializando los estados....
+    finding_coin.action = &find_coin;
+    seeking_player.action = &follow_player;
+    finding_coin.transitions.push_back({&seeking_player, &check_coin, &calculate_path});
+    seeking_player.transitions.push_back({&seeking_player, &not_coin, &calculate_path});
 
     check_coin.condition = &exist_coin;
     not_coin.condition = &check_coin;

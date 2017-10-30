@@ -1,21 +1,21 @@
 #include "State.h"
 
 State* Transition::get_target_state() {
-	return target_state;
+    return target_state;
 }
 
 bool Transition::is_triggered() {
-	return condition -> test();
+    return condition -> test();
 }
 
 void Transition::execute_action() {
-	action -> execute();
+    action -> execute();
 }
 
 Action* State::get_action() {
-	return action;
+    return action;
 }
 
 vector <Transition> State::get_transitions(){
-	return transitions;
+    return transitions;
 }

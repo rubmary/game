@@ -16,11 +16,10 @@ class State;
  *
  **/
 class Transition {
+public:
     State *target_state;
     Condition *condition;
     Action *action;
-
-public:
     State* get_target_state();
     bool is_triggered();
     void execute_action();
@@ -34,9 +33,9 @@ public:
  *
  **/
 class State {
+public:
     Action *action;
     vector <Transition> transitions;
-public:
     Action *get_action();
     vector <Transition> get_transitions();
 };
