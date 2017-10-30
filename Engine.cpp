@@ -11,10 +11,6 @@ Engine::Engine(int w = 1300, int h =700, int m = 20) {
         "Simple Game Engine",
         Style::Default);
 
-    wall1.setPosition(150, 250);
-    wall2.setPosition(150, 400);
-    wall1.setFillColor(Color(150, 50, 250));
-    // wall2.setFillColor(Color(150, 50, 250));
     ray.setFillColor(Color(150, 50, 250));
     ray1.setFillColor(Color(150, 50, 250));
     ray2.setFillColor(Color(150, 50, 250));
@@ -26,6 +22,23 @@ Engine::Engine(int w = 1300, int h =700, int m = 20) {
     // Associate the sprite with the texture
     // m_BackgroundSprite.setTexture(m_BackgroundTexture);
 
+}
+
+void Engine::start() {
+    Clock clock;
+    while (m_Window.isOpen()) {
+        // Restart the clock and save the elapsed time into dt
+        Time dt = clock.restart();
+        
+        // Make a fraction from the delta time
+        double time = dt.asSeconds();
+
+        input();
+        update(time);
+        agent.check_bounders(width, height);
+        player.check_bounders(width, height);
+        draw();
+    }
 }
 
 void Engine::input() {
@@ -55,8 +68,8 @@ void Engine::input() {
         player.stop_down();
 }
 
-void Engine::update(double time)
-{
+
+void Engine::update(double time) {
     player.update(time);
     agent.update();
     ray.setPosition(agent.character.position.x, agent.character.position.z);
@@ -73,16 +86,11 @@ void Engine::update(double time)
 void Engine::draw() {
     
     // Rub out the last frame
-    m_Window.clear(Color::White);
+    m_Window.clear(Color::Black);
     // Draw the background
     m_Window.draw(m_BackgroundSprite);
     m_Window.draw(player.get_sprite());
-    // m_Window.draw(agent.get_sprite());
-    m_Window.draw(wall1);
-    m_Window.draw(wall2);
-    m_Window.draw(ray);
-    m_Window.draw(ray1);
-    m_Window.draw(ray2);
+    m_Window.draw(agent.get_sprite());
     // Show everything we have just drawn
     m_Window.display();
 }
@@ -196,4 +204,29 @@ void EnginePrioritySteering::start() {
         player.check_bounders(width, height);
         draw();
     }
+}
+
+void EngineTest::input() {
+    Engine::input();
+    if (Keyboard::isKeyPressed(Keyboard::M))
+    show_map = true;
+    
+    if (Keyboard::isKeyPressed(Keyboard::N))
+        show_map = false;
+}
+EngineTest::EngineTest() {}
+
+void EngineTest::draw() {
+    m_Window.clear(Color::Black);
+    m_Window.draw(player.get_sprite());
+    m_Window.draw(agent.get_sprite());
+    for (int i = 0; i < walls.size(); i++)
+        m_Window.draw(walls[i]);
+    if (show_map) {
+        for (int i = 0; i < map.size(); i++)
+            m_Window.draw(map[i]);
+        for (int i = 0; i < centroids.size(); i++)
+            m_Window.draw(centroids[i]);
+    }
+    m_Window.display();
 }

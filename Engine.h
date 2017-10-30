@@ -17,21 +17,19 @@ public:
     // Agents
     Agent agent   = Agent(200, 0, 200, 10);
     Player player = Player(250, 0, 250, 400);        
-    
     // Walls
-    RectangleShape wall1 = RectangleShape(Vector2f(350, 1));
-    RectangleShape wall2 = RectangleShape(Vector2f(150, 1));
 
     // Rays
     RectangleShape ray  = RectangleShape(Vector2f(30, 1));
     RectangleShape ray1 = RectangleShape(Vector2f(30, 1));
     RectangleShape ray2 = RectangleShape(Vector2f(30, 1));
 
-    void input();
+    void start();
+    virtual void input();
     
     void update(double time);
     
-    void draw();
+    virtual void draw();
 
     // The Engine constructor
     Engine(int width, int height, int margin);
@@ -67,4 +65,15 @@ public:
     EnginePrioritySteering();
     void start();
     void steering_priority_steering(double time);
+};
+
+class EngineTest : public Engine {
+public:
+    vector <RectangleShape> walls;
+    vector <RectangleShape> map;
+    vector <RectangleShape> centroids;
+    bool show_map;
+    EngineTest();
+    void draw();
+    void input();
 };

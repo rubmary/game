@@ -21,18 +21,18 @@ RectangleShape get_shape(const Vector2f &A, const Vector2f &B, Color color) {
     return shape;
 }
 int main() {
-
     
     double width = 1210, height = 710;
     int N, ratio;
     cin >> N >> ratio;
     vector <Color> color(4);
-    vector <RectangleShape> shape(N);
     color[0] = Color(155,64,0);
     color[1] = Color::Blue;
     color[2] = Color::Yellow;
     color[3] = Color::Red;
     vector <Edge> edges(N);
+    vector <RectangleShape> division;
+    vector <RectangleShape> walls;
 
     int x1, y1, x2, y2, c;
     for (int i = 0; i < N; i++) {
@@ -43,7 +43,11 @@ int main() {
         x2 = x2*ratio + 4;
         y2 = y2*ratio + 4;
         edges[i] = {{x1, y1}, {x2, y2}, c == 1 || c == 2, vector <int>(0)};
-        shape[i] = get_shape({ (float) x1,  (float) y1}, { (float) x2,  (float) y2}, color[c]);
+        RectangleShape S = get_shape({ (float) x1,  (float) y1}, { (float) x2,  (float) y2}, color[c]);
+        if (c == 1)
+            division.push_back(S);
+        else
+            walls.push_back(S); 
     }
 
     cout << "before make graph..." << endl;
@@ -62,40 +66,28 @@ int main() {
 
     cout << "hola :D" << endl;
     String title = "Mapa, triangulacion";
-    RenderWindow window(VideoMode(width, height), title);
 
-    window.clear(Color::Black);
     
-    for (int i = 0; i < N; i++)
-        window.draw(shape[i]);
+    // for (int i = 0; i < n; i++)
+    //     window.draw(centroids[i]);
+
+    // cout << "Finding path..." << endl;
+    // Path path = graph.find_path({4, 0, 704}, {64, 0, 64});
+    // int M = path.points.size();
+
+    // vector <RectangleShape> P(M);
+    // for (int i = 1; i < M; i++) {
+    //     Vector3 <double> A = path.points[i-1], B = path.points[i];
+    //     P[i-1] = get_shape({(float)A.x, (float)A.z}, {(float)B.x, (float)B.z}, Color::White);
+    // }
     
-    for (int i = 0; i < n; i++)
-        window.draw(centroids[i]);
+    EngineTest engine;
+    engine.walls = walls;
+    engine.map   = division;
+    engine.centroids = centroids;
+    engine.start();
 
-    cout << "Finding path..." << endl;
-    Path path = graph.find_path({4, 0, 704}, {64, 0, 64});
-    int M = path.points.size();
 
-    vector <RectangleShape> P(M);
-    for (int i = 1; i < M; i++) {
-        Vector3 <double> A = path.points[i-1], B = path.points[i];
-        P[i-1] = get_shape({(float)A.x, (float)A.z}, {(float)B.x, (float)B.z}, Color::White);
-    }
-
-    for (int i = 0; i < N; i++)
-        window.draw(shape[i]);
-    
-    for (int i = 0; i < n; i++)
-        window.draw(centroids[i]);
-
-    for (int i = 0; i < M-1; i++)
-        window.draw(P[i]);
-
-    while (window.isOpen()) {
-        if (Keyboard::isKeyPressed(Keyboard::Escape))
-            window.close();
-        window.display();
-    }
 
     return 0;
 }
