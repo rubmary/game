@@ -18,11 +18,7 @@ void FindBestSegmentAction::execute() {
 }
 
 void FindBestPath::execute() {
-    if (start == NULL)
-        *start = graph -> node(follow_path -> character -> position);
-    if (end == NULL)
-        *end   = graph -> node(follow_path -> character -> position);
-    follow_path -> path = graph -> find_path(*start, *end);
+    follow_path -> path = graph -> find_path(follow_path -> character -> position, *target);
     follow_path -> end_path = false;
     follow_path -> segment = 0;
 }
@@ -30,8 +26,8 @@ void FindBestPath::execute() {
 
 void SteeringBehaviorAction::execute() {
     SteeringOutput steering;
-    steering_behavior.getSteering(&steering);
-    (steering_behavior.character) -> integrate(steering, *time);
+    steering_behavior -> getSteering(&steering);
+    (steering_behavior -> character) -> integrate(steering, *time);
 }
 
 void MultipleActionsAction::execute() {

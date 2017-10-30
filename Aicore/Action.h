@@ -63,8 +63,8 @@ public:
  **/
 class FindBestPath : public Action {
 public:
-    Vector3 <double> target;
-    int *start, *end;
+    Vector3 <double> *target;
+    // int *start, *end;
     FollowPath *follow_path;
     Graph *graph;
     void execute();
@@ -78,7 +78,7 @@ public:
  **/
 class SteeringBehaviorAction : public Action {
 public:
-    SteeringBehaviour steering_behavior;
+    SteeringBehaviour *steering_behavior;
     double *time;
     void execute();
 };

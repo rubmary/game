@@ -6,6 +6,7 @@ Player::Player(int x = 0, int y = 0, int z = 0, double s = 0)
     speed = s;
 
     // Set the Bob's starting position
+    sprite.setFillColor(Color::Green);
     character.position.x = x;
     character.position.y = y;
     character.position.z = z; 

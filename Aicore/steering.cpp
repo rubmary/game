@@ -125,6 +125,7 @@ void ObstacleAvoidance::getSteering(SteeringOutput* output) {
         return;
     Collision collision = collision_detector.get_collision(character -> position, ray, coll);
     *target = collision.position + collision.normal*avoid_distance;
+    *target = (character -> position) - (character -> velocity);
     Seek::getSteering(output);
 }
 

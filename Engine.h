@@ -15,7 +15,7 @@ public:
     Texture m_BackgroundTexture;
     
     // Agents
-    Agent agent   = Agent(200, 0, 200, 10);
+    Agent agent   = Agent(64, 0, 64, 10);
     Player player = Player(250, 0, 250, 400);        
     // Walls
 
@@ -27,7 +27,7 @@ public:
     void start();
     virtual void input();
     
-    void update(double time);
+    virtual void update(double time);
     
     virtual void draw();
 
@@ -69,11 +69,36 @@ public:
 
 class EngineTest : public Engine {
 public:
+    // Cosas que se dibujan
     vector <RectangleShape> walls;
     vector <RectangleShape> map;
     vector <RectangleShape> centroids;
+    vector <RectangleShape> path;
+    
+    // Instancias de steering behaviors
+    ObstacleAvoidance obstacle_avoidance;
+    Seek seek;
+    FollowPath follow_path;
+    PrioritySteering priority_steering;
+    
+
+    // Instancias de condiciones
+    BoolCondition check_coin;
+    NotCondition not_coin;
+
+    // Instancias de acciones
+    SteeringBehaviorAction find_coin;
+    SteeringBehaviorAction follow_player;
+    FindBestPath calculate_path;
+    
+    Agent coin;
+    Graph graph;
+    bool exist_coin = false;
+    double time;
     bool show_map;
-    EngineTest();
+    EngineTest(vector <Wall> W);
     void draw();
     void input();
+    void start();
+    void update(double time);
 };

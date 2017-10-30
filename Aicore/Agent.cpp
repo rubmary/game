@@ -9,7 +9,7 @@ Agent::Agent(int x = 0, int y = 0, int z = 0, double s = 0)
     character.position.x = x;
     character.position.y = y;
     character.position.z = z;
-    sprite.setFillColor(Color(150, 50, 250));
+    sprite.setFillColor(Color::White);
 }
 
 void Agent::check_bounders(int width, int height)

@@ -67,27 +67,31 @@ int main() {
     cout << "hola :D" << endl;
     String title = "Mapa, triangulacion";
 
+    cout << "Finding path..." << endl;
+    Path path = graph.find_path({64, 0, 64}, {904, 0, 700});
+    int M = path.points.size();
+    vector <RectangleShape> P(M);
+    for (int i = 1; i < M; i++) {
+        Vector3 <double> A = path.points[i-1], B = path.points[i];
+        P[i-1] = get_shape({(float)A.x, (float)A.z}, {(float)B.x, (float)B.z}, Color::White);
+    }
     
-    // for (int i = 0; i < n; i++)
-    //     window.draw(centroids[i]);
-
-    // cout << "Finding path..." << endl;
-    // Path path = graph.find_path({4, 0, 704}, {64, 0, 64});
-    // int M = path.points.size();
-
-    // vector <RectangleShape> P(M);
-    // for (int i = 1; i < M; i++) {
-    //     Vector3 <double> A = path.points[i-1], B = path.points[i];
-    //     P[i-1] = get_shape({(float)A.x, (float)A.z}, {(float)B.x, (float)B.z}, Color::White);
-    // }
+    vector <Wall> W;
+    for (int i = 0; i < edges.size(); i++) {
+        if (!edges[i].valid)
+            W.push_back({ {edges[i].A.first, 0, edges[i].A.second},
+                          {edges[i].B.first, 0, edges[i].B.second} });
+    }
+    cout << "Hay: " << W.size() << " paredes" << endl;
     
-    EngineTest engine;
+    EngineTest engine(W);
     engine.walls = walls;
+    engine.follow_path.path = path;
+    engine.path = P;
+    engine.graph = graph;
+    cout << walls.size() << endl;
     engine.map   = division;
     engine.centroids = centroids;
     engine.start();
-
-
-
     return 0;
 }

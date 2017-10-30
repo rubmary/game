@@ -61,7 +61,7 @@ bool is_triangle(Edge a, Edge b, Edge c) {
     return vertices.size() == 3;
 }
 
-Graph::Graph(vector <Edge>edges) {
+Graph::Graph(vector <Edge>edges = vector <Edge>()) {
     meshes.clear();
     E = edges;
     sort(E.begin(), E.end());
@@ -199,7 +199,7 @@ vector<int> Graph::A_star(int start, int end){
         path.push_back(current);
         current = parent[current];
     }
-
+    reverse(path.begin(), path.end());
     return path;
 }
 int Graph::get_size() {

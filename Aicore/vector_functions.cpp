@@ -75,17 +75,17 @@ bool intersect(Vector3<double> a, Vector3<double> b,  Vector3<double> c, Vector3
 
 Vector3 <double> intersection(Vector3<double> a, Vector3<double> b,  Vector3<double> c, Vector3<double> d) {
     if (square_magnitude(a-c) < EPS)
-        return a;
+        return c;
     if (square_magnitude(a-d) < EPS)
-        return a;
+        return d;
     if (square_magnitude(b-c) < EPS)
-        return b;
-    if (square_magnitude(b-c) < EPS)
-        return b;
+        return c;
+    if (square_magnitude(b-d) < EPS)
+        return d;
 
     if (collinear(a, b, c, d)) {
         if (((c-b)^(d-b)) < 0)
-            return b;
+            return c;
         if (((c-a)^(d-a)) < 0)
             return a;
         if (((a-d)^(b-d)) < 0)
@@ -117,10 +117,14 @@ Vector3 <double> rotate(Vector3<double> p, double t) {
 Vector3 <double> normal(Vector3 <double> A,  Vector3<double> B, Vector3 <double> P, Vector3 <double> position) {
     if (square_magnitude(A - P) < EPS)
         A = B;
-    Vector3 <double> n = rotate90(A - P);
+    // Vector3 <double> n = rotate90(A - P);
+    
+    // if (magnitude(position - (n+P)) > magnitude(position - (-n+P)))
+    //     n = -n;
+    // if(!check_semiplane(A, P, position, n + P))
+    //     n = -n;
+    Vector3 <double> n = (position - P);
     n /= magnitude(n);
-    if(!check_semiplane(A, P, position, n))
-        n = -n;
     return n;
 }
 
