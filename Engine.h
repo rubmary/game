@@ -92,10 +92,13 @@ public:
     FindBestPath calculate_path;
     Action none;
     
-    // Instancias de estados
+    // Instancias de estados -- no lo necesito -- lo dejare temporal :)
     State finding_coin;
     State seeking_player;
 
+    // Instancia de la maquina de estado
+    StateMachine state_machine;
+     
     Agent coin;
     Graph graph;
     bool exist_coin = false;

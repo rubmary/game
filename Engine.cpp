@@ -255,6 +255,11 @@ EngineTest::EngineTest(vector <Wall> W) {
     finding_coin.transitions.push_back({&seeking_player, &check_coin, &calculate_path});
     seeking_player.transitions.push_back({&seeking_player, &not_coin, &calculate_path});
 
+    state_machine.states.push_back(finding_coin);
+    state_machine.states.push_back(seeking_player);
+    state_machine.initial_state = &state_machine.states[1];
+    state_machine.current_state = state_machine.initial_state; 
+
     check_coin.condition = &exist_coin;
     not_coin.condition = &check_coin;
     coin.sprite.setFillColor(Color::Yellow); 

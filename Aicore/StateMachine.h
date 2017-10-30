@@ -8,9 +8,9 @@
  *
  **/
 class StateMachine {
+public:
     vector <State> states;
     State *initial_state;
     State *current_state;
-public:
     Action* update();
 };
