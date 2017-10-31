@@ -180,7 +180,7 @@ void EngineTest::start() {
         Time dt = clock.restart();
         time = dt.asSeconds();
         input();
-        find_coin.execute();
+        state_machine.update() -> execute();
         update(time);
         agent.check_bounders(width, height);
         player.check_bounders(width, height);
@@ -207,7 +207,6 @@ void EngineTest::input() {
         exist_coin = true;
         coin.character.position.x = random() % 1000 + 50;
         coin.character.position.z = random() % 500 + 50;
-        calculate_path.execute();
     }
 
 }
@@ -252,8 +251,8 @@ EngineTest::EngineTest(vector <Wall> W) {
     // Inicializando los estados....
     finding_coin.action = &find_coin;
     seeking_player.action = &follow_player;
-    finding_coin.transitions.push_back({&seeking_player, &check_coin, &calculate_path});
-    seeking_player.transitions.push_back({&seeking_player, &not_coin, &calculate_path});
+    finding_coin.transitions.push_back({&seeking_player, &not_coin, &none});
+    seeking_player.transitions.push_back({&finding_coin, &check_coin, &calculate_path});
 
     state_machine.states.push_back(finding_coin);
     state_machine.states.push_back(seeking_player);
