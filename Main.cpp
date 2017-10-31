@@ -37,7 +37,6 @@ int main() {
     int x1, y1, x2, y2, c;
     for (int i = 0; i < N; i++) {
         cin >> x1 >> y1 >> x2 >> y2 >> c;
-        // if (c == 1) continue;
         x1 = x1*ratio + 4;
         y1 = y1*ratio + 4;
         x2 = x2*ratio + 4;
@@ -50,30 +49,14 @@ int main() {
             walls.push_back(S); 
     }
 
-    cout << "before make graph..." << endl;
-
     Graph graph(edges);
     int n = graph.get_size();
-    cout << "before calculate positions..." << endl;
     graph.calculate_positions();
-    cout << n << endl;
 
     vector <RectangleShape> centroids(n);
     for (int i = 0; i < n; i++) {
         Vector3 <double> G = graph.position(i);
         centroids[i] = get_shape({(float)G.x, (float)G.z}, {(float)G.x + 2, (float) G.z}, Color::White);
-    }
-
-    cout << "hola :D" << endl;
-    String title = "Mapa, triangulacion";
-
-    cout << "Finding path..." << endl;
-    Path path = graph.find_path({64, 0, 64}, {904, 0, 700});
-    int M = path.points.size();
-    vector <RectangleShape> P(M);
-    for (int i = 1; i < M; i++) {
-        Vector3 <double> A = path.points[i-1], B = path.points[i];
-        P[i-1] = get_shape({(float)A.x, (float)A.z}, {(float)B.x, (float)B.z}, Color::White);
     }
     
     vector <Wall> W;
@@ -82,14 +65,10 @@ int main() {
             W.push_back({ {edges[i].A.first, 0, edges[i].A.second},
                           {edges[i].B.first, 0, edges[i].B.second} });
     }
-    cout << "Hay: " << W.size() << " paredes" << endl;
-    
+
     EngineTest engine(W);
     engine.walls = walls;
-    engine.follow_path.path = path;
-    engine.path = P;
     engine.graph = graph;
-    cout << walls.size() << endl;
     engine.map   = division;
     engine.centroids = centroids;
     engine.start();

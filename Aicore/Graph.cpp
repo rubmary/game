@@ -20,7 +20,6 @@ vector<int> Edge::get_differents_nodes(int u){
 
 bool Triangle::is_inside(Vector3<double> pos) {
     vector <Vector3 <double> > vertices = get_vertices();
-    // cout << "is_inside" << endl;
     return inside(vertices[0], vertices[1], vertices[2], pos);
 }
 
@@ -67,7 +66,10 @@ Graph::Graph(vector <Edge>edges = vector <Edge>()) {
     sort(E.begin(), E.end());
     E.resize(distance(E.begin(), unique(E.begin(), E.end())));
     int M = E.size();
-    cout << M << endl;
+
+
+
+
     n = 0;
     for (int i = 0; i < M; i++) {
         for (int j = i + 1; j < M; j++) {
