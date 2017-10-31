@@ -1,20 +1,17 @@
 #include "Engine.h"
 #include <iostream>
 
-Engine::Engine(int w = 1300, int h =700, int m = 20) {
-// Get the screen resolution and create an SFML window and View
-    width  = w;
-    height = h;
-    margin = m;
+Engine::Engine(int width = 1300, int height =700, int margin = 20) :
+    width(width), height(height), margin(margin) {
 
-    m_Window.create(VideoMode(width + margin, height + margin),
+    window.create(VideoMode(width + margin, height + margin),
         "Simple Game Engine",
         Style::Default);
 }
 
 void Engine::start() {
     Clock clock;
-    while (m_Window.isOpen()) {
+    while (window.isOpen()) {
         Time dt = clock.restart();
         double time = dt.asSeconds();
         input();
@@ -28,7 +25,7 @@ void Engine::start() {
 void Engine::input() {
 // Handle the player quitting
     if (Keyboard::isKeyPressed(Keyboard::Escape))
-        m_Window.close();
+        window.close();
 
     // Handle the player moving
     if (Keyboard::isKeyPressed(Keyboard::A))
@@ -59,11 +56,11 @@ void Engine::update(double time) {
 }
 
 void Engine::draw() {
-    m_Window.clear(Color::Black);
-    m_Window.draw(m_BackgroundSprite);
-    m_Window.draw(player.get_sprite());
-    m_Window.draw(agent.get_sprite());
-    m_Window.display();
+    window.clear(Color::Black);
+    window.draw(m_BackgroundSprite);
+    window.draw(player.get_sprite());
+    window.draw(agent.get_sprite());
+    window.display();
 }
 
 
@@ -139,7 +136,7 @@ EngineTest::EngineTest(vector <Wall> W) {
 
 void EngineTest::start() {
     Clock clock;
-    while (m_Window.isOpen()) {
+    while (window.isOpen()) {
         Time dt = clock.restart();
         time = dt.asSeconds();
         input();
@@ -170,27 +167,27 @@ void EngineTest::input() {
 
     if (Keyboard::isKeyPressed(Keyboard::C) && !exist_coin) {
         exist_coin = true;
-        coin.character.position.x = random() % 1000 + 50;
-        coin.character.position.z = random() % 500 + 50;
+        coin.character.position.x = random() % 1100 + 50;
+        coin.character.position.z = random() % 650 + 50;
     }
 }
 
 
 void EngineTest::draw() {
-    m_Window.clear(Color::Black);
-    m_Window.draw(player.get_sprite());
-    m_Window.draw(agent.get_sprite());
+    window.clear(Color::Black);
+    window.draw(player.get_sprite());
+    window.draw(agent.get_sprite());
     
     if (show_map) {
         for (int i = 0; i < map.size(); i++)
-            m_Window.draw(map[i]);
+            window.draw(map[i]);
         for (int i = 0; i < centroids.size(); i++)
-            m_Window.draw(centroids[i]);
+            window.draw(centroids[i]);
     }
     for (int i = 0; i < walls.size(); i++)
-        m_Window.draw(walls[i]);
+        window.draw(walls[i]);
 
     if (exist_coin)
-        m_Window.draw(coin.get_sprite());
-    m_Window.display();
+        window.draw(coin.get_sprite());
+    window.display();
 }

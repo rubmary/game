@@ -6,32 +6,22 @@ class Engine {
 public:
     
     // A regular RenderWindow
-    RenderWindow m_Window;
+    RenderWindow window;
     // Size 
     int width, height, margin;
 
     // Declare a sprite and a Texture for the background
     Sprite m_BackgroundSprite;
-    Texture m_BackgroundTexture;
     
     // Agents
     Agent agent   = Agent(64, 0, 64, 10);
     Player player = Player(250, 0, 250, 400);        
-    // Walls
 
-    // Rays
-    RectangleShape ray  = RectangleShape(Vector2f(30, 1));
-    RectangleShape ray1 = RectangleShape(Vector2f(30, 1));
-    RectangleShape ray2 = RectangleShape(Vector2f(30, 1));
 
-    void start();
+    void start();    
     virtual void input();
-    
     virtual void update(double time);
-    
     virtual void draw();
-
-    // The Engine constructor
     Engine(int width, int height, int margin);
 };
 
@@ -75,7 +65,7 @@ public:
     bool exist_coin = false;
     double time;
     bool show_map;
-    
+
     EngineTest(vector <Wall> W);
     void draw();
     void input();

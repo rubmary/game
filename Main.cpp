@@ -21,7 +21,7 @@ RectangleShape get_shape(const Vector2f &A, const Vector2f &B, Color color) {
     return shape;
 }
 int main() {
-    
+    srand (time(NULL));
     double width = 1210, height = 710;
     int N, ratio;
     cin >> N >> ratio;
