@@ -24,7 +24,7 @@ void Flee::getSteering(SteeringOutput* output) {
 
 void Arrive::getSteering(SteeringOutput* output) {
     Vector3<double> direction = (*target) - (character -> position);
-    double distance = square_magnitude(direction);
+    double distance = magnitude(direction);
     double wanted_speed;
     Vector3<double> wanted_velocity;
     if (distance < target_radius) {

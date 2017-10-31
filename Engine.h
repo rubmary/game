@@ -79,6 +79,7 @@ public:
     ObstacleAvoidance obstacle_avoidance;
     Seek seek;
     FollowPath follow_path;
+    Arrive arrive;
     PrioritySteering priority_steering;
     
 
@@ -98,7 +99,7 @@ public:
 
     // Instancia de la maquina de estado
     StateMachine state_machine;
-     
+
     Agent coin;
     Graph graph;
     bool exist_coin = false;

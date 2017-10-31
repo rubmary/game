@@ -3,7 +3,6 @@
 using namespace std;
 
 Action* StateMachine::update() {
-    cout << "Estoy dentro de la maquina de estados :D " << endl;
     Transition *triggered_transition = NULL;
     vector <Transition> transitions = current_state -> get_transitions();
     for (int i = 0; i < transitions.size(); i++) {
@@ -13,7 +12,6 @@ Action* StateMachine::update() {
         }
     }
     if (triggered_transition) {
-        cout << "Se cumplio una transicion, deberia cambiar de estado..." << endl;
         triggered_transition -> execute_action();
         State* target_state = triggered_transition -> get_target_state();
         current_state = target_state;

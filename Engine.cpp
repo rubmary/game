@@ -11,9 +11,9 @@ Engine::Engine(int w = 1300, int h =700, int m = 20) {
         "Simple Game Engine",
         Style::Default);
 
-    ray.setFillColor(Color(150, 50, 250));
-    ray1.setFillColor(Color(150, 50, 250));
-    ray2.setFillColor(Color(150, 50, 250));
+    // ray.setFillColor(Color(150, 50, 250));
+    // ray1.setFillColor(Color(150, 50, 250));
+    // ray2.setFillColor(Color(150, 50, 250));
     
     // Load the background into the texture
     // Be sure to scale this image to your screen size
@@ -222,18 +222,27 @@ EngineTest::EngineTest(vector <Wall> W) {
     seek.target = &player.character.position;
     seek.max_acceleration = 400;
     
-
-    priority_steering.behaviours.resize(2);
-    priority_steering.behaviours[0] = &follow_path;
-    priority_steering.behaviours[1] = &seek;
-    priority_steering.character = &agent.character;
-    priority_steering.epsilon = 0.001;
-
     follow_path.character = &agent.character;
     follow_path.segment = 0;
     follow_path.path_offset  = 0.1;
     follow_path.target = new Vector3 <double> {0, 0, 0};
     follow_path.max_acceleration = 400;
+
+
+    arrive.character = &agent.character;
+    arrive.target = &coin.character.position;
+    arrive.max_acceleration = 400;
+    arrive.max_speed = 200;
+    arrive.target_radius = 5;
+    arrive.slow_radius = 60;
+    arrive.time_to_target = 1;
+
+
+    priority_steering.behaviours.resize(2);
+    priority_steering.behaviours[0] = &follow_path;
+    priority_steering.behaviours[1] = &arrive;
+    priority_steering.character = &agent.character;
+    priority_steering.epsilon = 0.001;
 
     // action.steering_behavior = &priority_steering;
     // action.time = &time;
@@ -241,7 +250,7 @@ EngineTest::EngineTest(vector <Wall> W) {
     follow_player.steering_behavior = &seek;
     follow_player.time = &time;
 
-    find_coin.steering_behavior = &follow_path;
+    find_coin.steering_behavior = &priority_steering;
     find_coin.time = &time;
 
     calculate_path.follow_path = &follow_path;
