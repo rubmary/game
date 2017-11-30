@@ -117,13 +117,10 @@ Vector3 <double> rotate(Vector3<double> p, double t) {
 Vector3 <double> normal(Vector3 <double> A,  Vector3<double> B, Vector3 <double> P, Vector3 <double> position) {
     if (square_magnitude(A - P) < EPS)
         A = B;
-    // Vector3 <double> n = rotate90(A - P);
-    
-    // if (magnitude(position - (n+P)) > magnitude(position - (-n+P)))
-    //     n = -n;
-    // if(!check_semiplane(A, P, position, n + P))
-    //     n = -n;
-    Vector3 <double> n = (position - P);
+    Vector3 <double> n = rotate90(A - P);
+    position = position - P;
+    if (magnitude(position - n) > magnitude(position +n))
+        n = -n;
     n /= magnitude(n);
     return n;
 }

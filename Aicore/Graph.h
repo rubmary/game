@@ -45,6 +45,7 @@ struct Triangle{
         }
         return v1 == v2;
     }
+    int smell;
 };
 
 struct NodeRecord {
@@ -59,6 +60,14 @@ struct NodeRecord {
         return node < v.node;
     }
 };
+
+/**
+ *
+ * Clase Graph:
+ * Representacion del mapa del juego
+ * n:   Numero de nodos
+ *
+ **/
 class Graph{
     int n;
     vector <Edge> E;
@@ -78,4 +87,7 @@ public:
     double h(int i, int j);
     int get_size();
     Triangle get_node(int i);
+    void reset_smell();
+    void produce_smell(int i, int val);
+    void update_smell();
 };

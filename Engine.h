@@ -38,7 +38,7 @@ public:
     Seek seek;
     FollowPath follow_path;
     Arrive arrive;
-    PrioritySteering priority_steering;
+    PrioritySteering priority_steering, priority_steering2;
     
 
     // Instancias de condiciones

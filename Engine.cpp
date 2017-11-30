@@ -67,10 +67,10 @@ void Engine::draw() {
 EngineTest::EngineTest(vector <Wall> W) {
     
     // Inicialinzando evitacion de paredes, no funciona :(
-    obstacle_avoidance.lookahead      = 30;
-    obstacle_avoidance.avoid_distance = 40;
+    obstacle_avoidance.lookahead      = 20;
+    obstacle_avoidance.avoid_distance = 20;
     obstacle_avoidance.collision_detector.walls = W;
-    obstacle_avoidance.max_acceleration = 100;
+    obstacle_avoidance.max_acceleration = 500;
     
     // Inicializando seek
     seek.character = &agent.character;
@@ -95,11 +95,19 @@ EngineTest::EngineTest(vector <Wall> W) {
     arrive.time_to_target = 1;
 
     // inicializando priority_steerin
-    priority_steering.behaviours.resize(2);
-    priority_steering.behaviours[0] = &follow_path;
-    priority_steering.behaviours[1] = &arrive;
+    priority_steering.behaviours.resize(3);
+    priority_steering.behaviours[0] = &obstacle_avoidance;
+    priority_steering.behaviours[1] = &follow_path;
+    priority_steering.behaviours[2] = &arrive;
     priority_steering.character = &agent.character;
     priority_steering.epsilon = 0.001;
+
+    //inicializando priority_steering2
+    priority_steering2.behaviours.resize(2);
+    priority_steering2.behaviours[0] = &obstacle_avoidance;
+    priority_steering2.behaviours[1] = &seek;
+    priority_steering2.character = &agent.character;
+    priority_steering2.epsilon = 0.001;
 
 
     // inicializando las condiciones de la maquina de estado
@@ -107,7 +115,7 @@ EngineTest::EngineTest(vector <Wall> W) {
     not_coin.condition = &check_coin;
 
     // inicializando las acciones de la maquina de estados
-    follow_player.steering_behavior = &seek;
+    follow_player.steering_behavior = &priority_steering2;
     follow_player.time = &time;
 
     find_coin.steering_behavior = &priority_steering;

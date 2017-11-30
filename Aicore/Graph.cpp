@@ -66,10 +66,6 @@ Graph::Graph(vector <Edge>edges = vector <Edge>()) {
     sort(E.begin(), E.end());
     E.resize(distance(E.begin(), unique(E.begin(), E.end())));
     int M = E.size();
-
-
-
-
     n = 0;
     for (int i = 0; i < M; i++) {
         for (int j = i + 1; j < M; j++) {
@@ -209,13 +205,28 @@ int Graph::get_size() {
 }
 
 Triangle Graph::get_node(int i) {
-    cout << "Node: " << i << endl;
-    cout << (((meshes[i].a) -> A).first - 4)/2 << ' ' << (((meshes[i].a) -> A).second - 4)/2 << '\t';
-    cout << (((meshes[i].a) -> B).first - 4)/2 << ' ' << (((meshes[i].a) -> B).second - 4)/2 << endl;
-    cout << (((meshes[i].b) -> A).first - 4)/2 << ' ' << (((meshes[i].b) -> A).second - 4)/2 << '\t';
-    cout << (((meshes[i].b) -> B).first - 4)/2 << ' ' << (((meshes[i].b) -> B).second - 4)/2 << endl;
-    cout << (((meshes[i].c) -> A).first - 4)/2 << ' ' << (((meshes[i].c) -> A).second - 4)/2 << '\t';
-    cout << (((meshes[i].c) -> B).first - 4)/2 << ' ' << (((meshes[i].c) -> B).second - 4)/2 << endl;
-    cout << "Centroid: " << (positions[i].x - 4)/2 << ' ' << (positions[i].z - 4)/2 << endl;
     return meshes[i];
+}
+
+void Graph::reset_smell(){
+    for (int i = 0; i < n; i++)
+        meshes[i].smell = 0;
+}
+
+void Graph::update_smell(){
+    vector <int> prev_smell(n);
+    for (int i = 0; i < n; i++)
+        prev_smell[i] = meshes[i].smell;
+    reset_smell();
+    for (int i = 0; i < n; i++) {
+        int val = (prev_smell[i]*9/10)/5;
+        meshes[i].smell += 2*val;
+        vector<int> neighbors = get_neighbors(i);
+        for (int j = 0; j < neighbors.size(); j++)
+            meshes[neighbors[j]].smell += val;
+    }
+}
+
+void Graph::produce_smell(int val, int i) {
+    meshes[i].smell += val;
 }
