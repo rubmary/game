@@ -9,6 +9,7 @@ struct Edge {
     pair <double, double> A, B;
     bool valid;
     vector <int> nodes;
+    int type;
     vector<int> get_differents_nodes(int u);
     bool operator < (const Edge &e) const {
         Edge e1 = {A, B, valid}, e2 = e;

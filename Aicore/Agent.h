@@ -1,4 +1,3 @@
-//#pragma once
 #include "StateMachine.cpp"
 #include <SFML/Graphics.hpp>
 

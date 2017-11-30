@@ -1,0 +1,95 @@
+#include "include.h"
+
+bool operator < (const Vector2f &A, const Vector2f &B);
+RectangleShape make_shape(const Vector2f &A, const Vector2f &B, Color color);
+
+
+/**
+ *
+ * Clase DrawableObjects
+ * Clase utilizada para la interfaz
+ * del juego
+ *
+ * @shape:   figura del objeto representado
+ * @visible: booleano que indica si el actual objeto 
+ *           se debe pintar en el tablero
+ **/
+class DrawableObject{
+
+protected:
+    Shape* shape;
+    Color color;
+    bool visible;
+
+public:
+    /**
+     *
+     * Retorna la forma del objeto para
+     * ser mostrada en la pantalla
+     *
+     **/
+    virtual Shape* get_shape();
+
+    /**
+     *
+     * Indica si el objeto debe ser mostrado
+     * en el tablero o no
+     *
+     **/
+    virtual bool is_visible();
+
+    /**
+     *
+     * Hace que el objeto sea visible en 
+     * el campo
+     **/
+    void make_visible();
+    
+    /**
+     * Hace que el objeto no se muestre en 
+     * el campo
+     **/
+    void make_invisible();
+};
+
+/**
+ *
+ * Clase DrawableWall
+ * Clase utilizada para representar la interfaz
+ * de las paredes de la clase
+ *
+ **/
+class DrawableWall : public DrawableObject {
+public:
+    DrawableWall(float x1, float y1, float x2, float y2, Color color);
+    virtual bool is_visible();
+};
+
+/**
+ *
+ * Clase DrawableEdge
+ * Clase utilizada para representar la interfaz
+ * de los edges del grafo
+ *
+ **/
+class DrawableEdge : public DrawableObject {
+    bool *active_visibility;
+
+public:
+    DrawableEdge(float x1, float y1, float x2, float y2, Color color);
+    virtual bool is_visible();
+};
+
+/**
+ *
+ * Clase DrawableAgent
+ * Clase utilizada para representar la interfaz
+ * de los agentes
+ *
+ **/
+class DrawableAgent : public DrawableObject {
+public:
+    DrawableAgent(Kinematic &character, Color color, int size);
+    Kinematic* character;
+    virtual Shape* get_shape();
+};

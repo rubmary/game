@@ -1,74 +1,51 @@
-#pragma once
-#include "include.h"
-using namespace sf;
+#include "Reader.cpp"
 
-class Engine {
-public:
-    
-    // A regular RenderWindow
+/**
+ *
+ * Struct front, contiene los elementos
+ * de la interfaz del motor
+ * @window:     ventana del motor
+ * @objects:    objetos que se dibujan en el mapa
+ **/
+struct Front{
     RenderWindow window;
-    // Size 
-    int width, height, margin;
-
-    // Declare a sprite and a Texture for the background
-    Sprite m_BackgroundSprite;
+    vector <DrawableObject*> objects;
     
-    // Agents
-    Agent agent   = Agent(64, 0, 64, 10);
-    Player player = Player(250, 0, 250, 400);        
-
-
-    void start();    
-    virtual void input();
-    virtual void update(double time);
-    virtual void draw();
-    Engine(int width, int height, int margin);
+    /**
+     *
+     * draw,
+     * dibuja los objetos que son visibles
+     * en el campo
+     **/
+    void draw();
 };
 
-class EngineTest : public Engine {
-public:
-    // Cosas que se dibujan
-    vector <RectangleShape> walls;
-    vector <RectangleShape> map;
-    vector <RectangleShape> centroids;
-    vector <RectangleShape> path;
-    
-    // Instancias de steering behaviors
-    ObstacleAvoidance obstacle_avoidance;
-    Seek seek;
-    FollowPath follow_path;
-    Arrive arrive;
-    PrioritySteering priority_steering, priority_steering2;
-    
 
-    // Instancias de condiciones
-    BoolCondition check_coin;
-    NotCondition not_coin;
-
-    // Instancias de acciones
-    SteeringBehaviorAction find_coin;
-    SteeringBehaviorAction follow_player;
-    FindBestPath calculate_path;
-    Action none;
-    
-    // Instancias de estados -- no lo necesito -- lo dejare temporal :)
-    // o tal vez si... no estoy segura todavia de la implementacion jaja
-    State finding_coin;
-    State seeking_player;
-
-    // Instancia de la maquina de estado
-    StateMachine state_machine;
-
-    // Otros atributos del motor
-    Agent coin;
+/**
+ *
+ * Class Engine
+ * Motor del video-juego 
+ **/
+class Engine{
+    Front front;
+    vector <Wall> walls;
     Graph graph;
-    bool exist_coin = false;
-    double time;
-    bool show_map;
+public:
+    Engine( int width,
+            int height,
+            vector<DrawableObject*> objects,
+            vector <Wall> walls,
+            Graph graph);
 
-    EngineTest(vector <Wall> W);
-    void draw();
-    void input();
+    /**
+     *
+     * inicia el motor
+     **/
     void start();
-    void update(double time);
+
+    /**
+     *
+     * Maneja el input
+     **/
+    void input();
 };
