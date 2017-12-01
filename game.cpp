@@ -17,18 +17,19 @@ int main(){
     vector <DrawableObject*> objects, drawable_agents;
     vector <Agent*> agents;
     Player* player;
-    Object*   coin;
+    Object *coin, *player_receiver, *agent_receiver;
     bool* show_map;
 
     reader.read_map(graph, objects, walls, colors, show_map);
     cout << "Lei el mapa" << endl;
-    reader.read_agents(agents, drawable_agents, player, coin);
+    reader.read_agents(drawable_agents, player, coin, player_receiver, agent_receiver);
     
     for (int i = 0; i < drawable_agents.size(); i++)
         objects.push_back(drawable_agents[i]);
     cout << "Lei los archivos" << endl;
-    Engine engine(1320, 720, objects, walls, graph, player, show_map, coin);    
+    Engine engine(1320, 720, objects, walls, graph, player, show_map, coin, player_receiver, agent_receiver);    
     cout << "Cree el engine" << endl;
     engine.start();
     cout << "Sali del engine" << endl;
+    return 0;
 }

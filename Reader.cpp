@@ -23,7 +23,7 @@ void Reader::read_map ( Graph &graph,
         edges[i] = {{x1, y1}, {x2, y2}, c == 1 || c == 2, vector <int>(0), c};
         if (c == 1) {
             DrawableEdge *S =  new DrawableEdge(x1, y1, x2, y2, colors[c]);
-            S -> active_visibility = show_map;
+            S -> visible = show_map;
             segments.push_back(S);
         } else {
             DrawableWall *S =  new DrawableWall(x1, y1, x2, y2, colors[c]);
@@ -39,10 +39,11 @@ void Reader::read_map ( Graph &graph,
     file.close();
 }
 
-void Reader::read_agents(vector <Agent*> &agents, 
-                         vector <DrawableObject*> &drawable_agents,
-                         Player* &player,
-                         Object*   &coin) {
+void Reader::read_agents(vector <DrawableObject*> &drawable_agents,
+                         Player*    &player,
+                         Object*    &coin,
+                         Object*    &player_receiver,
+                         Object*    &agent_receiver) {
     int N;
     ifstream file("Agents.txt");
     file >> N;
@@ -53,6 +54,7 @@ void Reader::read_agents(vector <Agent*> &agents,
         DrawableObject* drawable_agent;
         double x, y, z, speed;
         int size;
+        
         if (type == 0) {
             file >> x >> y >> z >> speed >> size;
             player = new Player(x, y, z, speed);
@@ -64,6 +66,19 @@ void Reader::read_agents(vector <Agent*> &agents,
             drawable_agent = new DrawableAgent(coin->character, Color::Yellow, size);
             drawable_agent -> visible = &(coin -> exists);
             drawable_agents.push_back(drawable_agent);
+        }else if(type == 2) {
+            file >> size;
+            player_receiver = new Object();
+            drawable_agent  = new DrawableAgent(player_receiver -> character, Color::Blue, size);
+            drawable_agent -> visible = &(player_receiver -> exists);
+            drawable_agents.push_back(drawable_agent);  
+        } else if(type == 3) {
+            file >> size;
+            agent_receiver = new Object();
+            drawable_agent = new DrawableAgent(agent_receiver -> character, Color::Green, size);
+            drawable_agent -> visible = &(agent_receiver -> exists);
+            drawable_agents.push_back(drawable_agent);
         }
     }
+    file.close();
 }

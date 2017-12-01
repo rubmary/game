@@ -43,12 +43,6 @@ DrawableEdge::DrawableEdge(float x1, float y1, float x2, float y2, Color c) {
     shape = new RectangleShape(make_shape({x1, y1}, {x2, y2}, color));
 }
 
-bool DrawableEdge::is_visible(){
-    if (active_visibility == NULL)
-        return true;
-    return *active_visibility;
-}
-
 DrawableAgent::DrawableAgent(Kinematic &chart, Color c, int size) {
     color = c;
     character = &chart;

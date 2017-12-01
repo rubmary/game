@@ -17,20 +17,24 @@ bool Logic::exists_coin() {
 	return coin -> exists;
 }
 
-void Logic::choose_position() {
-	coin -> node = rand() % graph.get_size();
+int Logic::choose_position() {
+	return rand() % graph.get_size();
 }
 
 void Logic::appear_coin() {
-	// cout << "Intento aparecer la moneda" << endl;
-	choose_position();
-	// cout << "elegi el nodo e intento asignar la posicion" << endl;
-
+	coin -> node = choose_position();
 	(coin -> character).position = graph.position(coin -> node);
-	// cout << "Asigne posicion a la moneda" << endl;
 	coin -> exists = true;
+	player_receiver -> exists = false;
+	agent_receiver  -> exists = false; 
 }
 
 void Logic::disappear_coin() {
 	coin -> exists = false;
+	player_receiver -> exists = true;
+	agent_receiver  -> exists = true;
+	player_receiver -> node = choose_position();
+	agent_receiver  -> node = choose_position();
+	(player_receiver -> character).position = graph.position(player_receiver -> node);
+	(agent_receiver  -> character).position = graph.position(agent_receiver  -> node);
 }

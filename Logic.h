@@ -6,11 +6,12 @@
  * logica del juego
  * @player:     apuntador al jugador del juego
  * @coin:       apuntador a la moneda del juego
- * @receptor:   apuntador al receptor del juego
+ * @player_receiver:    receptor del jugador
+ * @agent_receiver:     recpetor del oponente
  **/
 struct Logic {
     Player* player;
-    Object *coin, *receptor, *weapon;
+    Object *coin, *player_receiver, *agent_receiver;
     vector <Agent*> agents;
     vector <Wall> walls;
     Graph graph;
@@ -44,9 +45,10 @@ struct Logic {
     bool exists_coin();
 
     /**
-     * Elegir posicion de la moneda
+     * Elegir un nodo para la posicion de
+     * un objeto
      **/
-    void choose_position();
+    int choose_position();
 
     /**
      * appear_coin 
@@ -60,8 +62,4 @@ struct Logic {
      * hacer desaparecer la moneda
      **/
     void disappear_coin();
-
-
-
-
 };

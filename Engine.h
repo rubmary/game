@@ -37,7 +37,9 @@ public:
             Graph graph,
             Player* player,
             bool* show_map,
-            Object* coin);
+            Object* coin,
+            Object* player_receiver,
+            Object* agent_receiver);
     /**
      *
      * Iniciar el motor
