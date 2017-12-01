@@ -39,13 +39,13 @@ public:
 
     /**
      *
-     * inicia el motor
+     * Iniciar el motor
      **/
     void start();
 
     /**
      *
-     * Maneja el input
+     * Manejar el input
      **/
     void input();
 };

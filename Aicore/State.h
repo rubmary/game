@@ -13,7 +13,6 @@ class State;
  * la transicion se cumpla, usualmente acciones relacionadas
  * a modificar parametros externos o a encontrar caminos
  *
- *
  **/
 class Transition {
 public:
