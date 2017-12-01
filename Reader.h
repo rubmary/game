@@ -9,5 +9,6 @@ public:
                     bool* &show_map);
     void read_agents(vector <Agent*> &agents,
                      vector <DrawableObject*> &drawable_edges,
-                     Player* &player);
+                     Player* &player,
+                     Object*  &coin);
 };

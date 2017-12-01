@@ -24,7 +24,7 @@ class Object : public Agent{
 public:
     int node;
     bool exists;
-    void virtual update();
+    void virtual update() {};
 };
 
 /**

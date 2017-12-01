@@ -19,9 +19,8 @@ class DrawableObject{
 protected:
     Shape* shape;
     Color color;
-    bool visible;
-
 public:
+    bool *visible;
     /**
      *
      * Retorna la forma del objeto para
@@ -37,19 +36,6 @@ public:
      *
      **/
     virtual bool is_visible();
-
-    /**
-     *
-     * Hace que el objeto sea visible en 
-     * el campo
-     **/
-    void make_visible();
-    
-    /**
-     * Hace que el objeto no se muestre en 
-     * el campo
-     **/
-    void make_invisible();
 };
 
 /**

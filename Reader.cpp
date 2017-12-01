@@ -41,7 +41,8 @@ void Reader::read_map ( Graph &graph,
 
 void Reader::read_agents(vector <Agent*> &agents, 
                          vector <DrawableObject*> &drawable_agents,
-                         Player* &player) {
+                         Player* &player,
+                         Object*   &coin) {
     int N;
     ifstream file("Agents.txt");
     file >> N;
@@ -49,12 +50,19 @@ void Reader::read_agents(vector <Agent*> &agents,
         int type;
         file >> type;
         Agent* agent;
-        DrawableObject* drawable_agent; 
+        DrawableObject* drawable_agent;
+        double x, y, z, speed;
+        int size;
         if (type == 0) {
-            double x, y, z, speed;
-            file >> x >> y >> z >> speed;
+            file >> x >> y >> z >> speed >> size;
             player = new Player(x, y, z, speed);
-            drawable_agent = new DrawableAgent(player->character, Color::White, 5);
+            drawable_agent = new DrawableAgent(player->character, Color::White, size);
+            drawable_agents.push_back(drawable_agent);
+        }else if(type == 1) {
+            file >> size;
+            coin = new Object();
+            drawable_agent = new DrawableAgent(coin->character, Color::Yellow, size);
+            drawable_agent -> visible = &(coin -> exists);
             drawable_agents.push_back(drawable_agent);
         }
     }

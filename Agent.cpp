@@ -1,5 +1,6 @@
 #include "Agent.h"
 
+
 Player::Player(double x, double y, double z, double s){
 	character.position = {x, y, z};
 	character.max_speed = s;

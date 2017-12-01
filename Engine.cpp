@@ -19,11 +19,15 @@ Engine::Engine( int width,
                 vector <Wall> walls,
                 Graph graph,
                 Player* player,
-                bool* show_map) {
+                bool* show_map,
+                Object* coin) {
+    
     logic.walls  = walls;
     logic.graph  = graph;
     logic.player = player;
     logic.show_map = show_map;
+    logic.coin = coin;
+    logic.graph.calculate_positions();
     front.window.create(VideoMode(width, height),
                         "Game",
                         Style::Default);
@@ -71,4 +75,10 @@ void Engine::input(){
 
     if (Keyboard::isKeyPressed(Keyboard::N))
         logic.off_map();
+
+    if (Keyboard::isKeyPressed(Keyboard::C) && !logic.exists_coin())
+        logic.appear_coin();
+
+    if (Keyboard::isKeyPressed(Keyboard::X))
+        logic.disappear_coin();
 }

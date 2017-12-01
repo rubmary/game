@@ -22,40 +22,31 @@ RectangleShape make_shape(const Vector2f &A, const Vector2f &B, Color color) {
 
 
 Shape* DrawableObject::get_shape(){
-	return shape;
+    return shape;
 }
 
 bool DrawableObject::is_visible(){
-	return visible;
+    return *visible;
 }
-
-void DrawableObject::make_visible(){
-	visible = true;
-}
-
-void DrawableObject::make_invisible(){
-	visible = false;
-}
-
 
 DrawableWall::DrawableWall(float x1, float y1, float x2, float y2, Color c) {
-	color = c;
-	shape = new RectangleShape(make_shape({x1, y1}, {x2, y2}, color));
+    color = c;
+    shape = new RectangleShape(make_shape({x1, y1}, {x2, y2}, color));
 }
 
 bool DrawableWall::is_visible(){
-	return true;
+    return true;
 }
 
 DrawableEdge::DrawableEdge(float x1, float y1, float x2, float y2, Color c) {
-	color = c;
-	shape = new RectangleShape(make_shape({x1, y1}, {x2, y2}, color));
+    color = c;
+    shape = new RectangleShape(make_shape({x1, y1}, {x2, y2}, color));
 }
 
 bool DrawableEdge::is_visible(){
     if (active_visibility == NULL)
         return true;
-	return *active_visibility;
+    return *active_visibility;
 }
 
 DrawableAgent::DrawableAgent(Kinematic &chart, Color c, int size) {
@@ -63,7 +54,7 @@ DrawableAgent::DrawableAgent(Kinematic &chart, Color c, int size) {
     character = &chart;
     shape = new CircleShape(size);
     shape -> setFillColor(color);
-    visible = true;
+    visible = new bool(true);
     get_shape();
 }
 

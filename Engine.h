@@ -36,7 +36,8 @@ public:
             vector <Wall> walls,
             Graph graph,
             Player* player,
-            bool* show_map);
+            bool* show_map,
+            Object* coin);
     /**
      *
      * Iniciar el motor
