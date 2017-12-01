@@ -67,8 +67,8 @@ void Engine::input(){
         logic.player -> stop_down();
 
     if (Keyboard::isKeyPressed(Keyboard::M))
-        *(logic.show_map) = true;
+        logic.on_map();
 
     if (Keyboard::isKeyPressed(Keyboard::N))
-        *(logic.show_map) = false;
+        logic.off_map();
 }
