@@ -18,10 +18,12 @@ Engine::Engine( int width,
                 vector<DrawableObject*> objects,
                 vector <Wall> walls,
                 Graph graph,
-                Player* player) {
+                Player* player,
+                bool* show_map) {
     logic.walls  = walls;
     logic.graph  = graph;
     logic.player = player;
+    logic.show_map = show_map;
     front.window.create(VideoMode(width, height),
                         "Game",
                         Style::Default);
@@ -58,9 +60,15 @@ void Engine::input(){
         logic.player -> move_up();
     else
         logic.player -> stop_up();                       
-    
+
     if (Keyboard::isKeyPressed(Keyboard::W))
         logic.player -> move_down();
     else
         logic.player -> stop_down();
+
+    if (Keyboard::isKeyPressed(Keyboard::M))
+        *(logic.show_map) = true;
+
+    if (Keyboard::isKeyPressed(Keyboard::N))
+        *(logic.show_map) = false;
 }

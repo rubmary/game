@@ -4,8 +4,10 @@ using namespace std;
 void Reader::read_map ( Graph &graph,
                         vector <DrawableObject*> &segments,
                         vector<Wall> &W,
-                        vector<Color> colors) {
+                        vector<Color> colors,
+                        bool* &show_map) {
     
+    show_map = new bool;
     int N, ratio;
     ifstream file("MAP.txt");
     file >> N >> ratio;
@@ -21,6 +23,7 @@ void Reader::read_map ( Graph &graph,
         edges[i] = {{x1, y1}, {x2, y2}, c == 1 || c == 2, vector <int>(0), c};
         if (c == 1) {
             DrawableEdge *S =  new DrawableEdge(x1, y1, x2, y2, colors[c]);
+            S -> active_visibility = show_map;
             segments.push_back(S);
         } else {
             DrawableWall *S =  new DrawableWall(x1, y1, x2, y2, colors[c]);

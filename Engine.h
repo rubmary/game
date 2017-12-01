@@ -35,7 +35,8 @@ public:
             vector<DrawableObject*> objects,
             vector <Wall> walls,
             Graph graph,
-            Player* player);
+            Player* player,
+            bool* show_map);
     /**
      *
      * Iniciar el motor

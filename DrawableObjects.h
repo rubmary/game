@@ -73,9 +73,8 @@ public:
  *
  **/
 class DrawableEdge : public DrawableObject {
-    bool *active_visibility;
-
 public:
+    bool *active_visibility;
     DrawableEdge(float x1, float y1, float x2, float y2, Color color);
     virtual bool is_visible();
 };

@@ -5,6 +5,6 @@ struct Logic {
     vector <Agent*> agents;
     vector <Wall> walls;
     Graph graph;
-
+    bool* show_map;
     void update(double time);
 };
