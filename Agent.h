@@ -51,10 +51,32 @@ class Player : public Agent {
     bool up_pressed;
     bool down_pressed;
 public:
+    Player(double x, double y, double z, double speed);
+    
+    /**
+     *
+     * Mover el jugador en alguna
+     * direccion
+     **/
     void move_left();
     void move_right();
     void move_up();
     void move_down();
 
-    virtual void update();
+    /**
+     *
+     * Para el movimiento en alguna
+     * direccion
+     **/
+    void stop_left();
+    void stop_right(); 
+    void stop_up();
+    void stop_down();
+
+    /**
+     *
+     * Actualizar la posicion del
+     * jugador
+     **/
+    virtual void update(double time);
 };

@@ -17,9 +17,9 @@ Engine::Engine( int width,
                 int height,
                 vector<DrawableObject*> objects,
                 vector <Wall> walls,
-                Graph graph) : 
-                walls(walls), graph(graph){
-    
+                Graph graph) {
+    logic.walls = walls;
+    logic.graph = graph;
     front.window.create(VideoMode(width, height),
                         "Game",
                         Style::Default);

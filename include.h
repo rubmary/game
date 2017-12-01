@@ -1,4 +1,4 @@
-#include "Agent.cpp"
+#include "Logic.cpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>

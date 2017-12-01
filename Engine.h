@@ -28,8 +28,7 @@ struct Front{
  **/
 class Engine{
     Front front;
-    vector <Wall> walls;
-    Graph graph;
+    Logic logic;
 public:
     Engine( int width,
             int height,
