@@ -63,6 +63,7 @@ DrawableAgent::DrawableAgent(Kinematic &chart, Color c, int size) {
     character = &chart;
     shape = new CircleShape(size);
     shape -> setFillColor(color);
+    visible = true;
     get_shape();
 }
 

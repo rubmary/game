@@ -1,8 +1,10 @@
 #include "Agent.cpp"
 
-class Logic {
-public:
+struct Logic {
+    Player* player;
     vector <Agent*> agents;
     vector <Wall> walls;
     Graph graph;
+
+    void update(double time);
 };

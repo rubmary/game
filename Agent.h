@@ -10,7 +10,7 @@
 class Agent {
 public:
     Kinematic character;
-    void virtual update();
+    void virtual update() {}
 };
 
 /**

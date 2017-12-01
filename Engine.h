@@ -34,8 +34,8 @@ public:
             int height,
             vector<DrawableObject*> objects,
             vector <Wall> walls,
-            Graph graph);
-
+            Graph graph,
+            Player* player);
     /**
      *
      * Iniciar el motor

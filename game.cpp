@@ -1,10 +1,10 @@
 #include "Engine.cpp"
+using namespace std;
 
 int main(){
     Reader reader;
 
-    Graph graph;
-    vector <Wall> walls;
+    
 
     vector<Color> colors(4);
     colors[0] = Color(155,64,0);
@@ -12,9 +12,20 @@ int main(){
     colors[2] = Color::Yellow;
     colors[3] = Color::Red;
 
-    vector <DrawableObject*> objects;
-    reader.read_map(graph, objects, walls, colors);
+    Graph graph;
+    vector <Wall> walls;
+    vector <DrawableObject*> objects, drawable_agents;
+    vector <Agent*> agents;
+    Player* player;
 
-    Engine engine(1320, 720, objects, walls, graph);
+    reader.read_map(graph, objects, walls, colors);
+    cout << "Lei el mapa" << endl;
+    reader.read_agents(agents, drawable_agents, player);
+    
+    for (int i = 0; i < drawable_agents.size(); i++)
+        objects.push_back(drawable_agents[i]);
+    cout << "Lei los archivos" << endl;
+    Engine engine(1320, 720, objects, walls, graph, player);
+    cout << "Cree el engine" << endl;
     engine.start();
 }
