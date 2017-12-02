@@ -13,7 +13,7 @@ struct Wall {
 
 class CollisionDetector {
 public:
-    vector <Wall> walls;
+    vector <Wall> *walls;
     int collide(Vector3 <double> position, Vector3 <double> &ray);
     Collision get_collision(Vector3 <double> position, Vector3 <double> ray, int i);
 };

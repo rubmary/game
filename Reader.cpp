@@ -5,7 +5,8 @@ void Reader::read_map ( Graph &graph,
                         vector <DrawableObject*> &segments,
                         vector<Wall> &W,
                         vector<Color> colors,
-                        bool* &show_map) {
+                        bool* &show_map)
+{
     
     show_map = new bool;
     int N, ratio;
@@ -43,7 +44,8 @@ void Reader::read_agents(vector <DrawableObject*> &drawable_agents,
                          Player*    &player,
                          Object*    &coin,
                          Object*    &player_receiver,
-                         Object*    &agent_receiver) {
+                         Object*    &agent_receiver)
+{
     int N;
     ifstream file("Agents.txt");
     file >> N;
@@ -81,4 +83,122 @@ void Reader::read_agents(vector <DrawableObject*> &drawable_agents,
         }
     }
     file.close();
+}
+
+void Reader::read_competitor(   Graph &graph,
+                                Character* &competitor,
+                                vector<Wall> &walls,
+                                Player &player,
+                                Object &coin,
+                                double &time)
+{
+    
+    ifstream file("competitor.txt");
+    double epsilon;
+    file >> epsilon;
+
+    /**************** COMPETIDOR ************/
+    competitor = new Character();
+    double x, z, max_speed;
+    file >> x >> z >> max_speed;
+    (competitor -> character).position = {x, 0, z};
+    (competitor -> character).max_speed = max_speed;
+
+    
+    // Evitar paredes
+    double lookahead, avoid_distance, max_acc_obstacle;
+    file >> lookahead >> avoid_distance >> max_acc_obstacle;
+    ObstacleAvoidance* obstacle_avoidance = new ObstacleAvoidance();
+    obstacle_avoidance -> lookahead = lookahead;
+    obstacle_avoidance -> avoid_distance = avoid_distance;
+    obstacle_avoidance -> max_acceleration = max_acc_obstacle;
+    (obstacle_avoidance -> collision_detector).walls = &walls;
+
+
+    /*************************SEGUIR MONEDA ********************/
+    //Seguir moneda
+    double path_offset, max_acc_follow_path;
+    file >> path_offset >> max_acc_follow_path;
+    FollowPath* follow_path = new FollowPath();
+    follow_path -> path_offset = path_offset;
+    follow_path -> max_acceleration = max_acc_follow_path;
+
+    //Arrive
+    double max_acc_arrive, max_speed_arrive, target_radius, slow_radius, time_to_target;
+    file >> max_speed_arrive >> max_speed_arrive;
+    file >> target_radius >> slow_radius >> time_to_target;
+    Arrive *arrive = new Arrive();
+    arrive -> target = &coin.character.position;
+    arrive -> max_acceleration = max_acc_arrive;
+    arrive -> max_speed = max_speed_arrive;
+    arrive -> target_radius = target_radius;
+    arrive -> slow_radius = slow_radius;
+    arrive -> time_to_target = time_to_target;
+
+
+    // Crear los steering que se utilizaran en la accion finding_coin
+    PrioritySteering *priority_steering_coin    = new PrioritySteering();
+    (priority_steering_coin -> behaviours).resize(3);
+    (priority_steering_coin -> behaviours)[0] = obstacle_avoidance;
+    (priority_steering_coin -> behaviours)[1] = follow_path;
+    (priority_steering_coin -> behaviours)[2] = arrive;
+    priority_steering_coin -> character = &(competitor -> character);
+    priority_steering_coin -> epsilon   = epsilon;
+
+
+
+    /*********************** SEEK (TEMPORAL) *********************/
+
+    // Seek
+    double max_acc_seek;
+    file >> max_acc_seek;
+    Seek *seek = new Seek();
+    seek -> target = &player.character.position;
+    seek -> max_acceleration = max_acc_seek;
+
+    PrioritySteering *priority_steering_seek = new PrioritySteering();
+    (priority_steering_seek -> behaviours)[0] = obstacle_avoidance;
+    (priority_steering_seek -> behaviours)[1] = seek;
+    priority_steering_seek -> character = &(competitor -> character);
+    priority_steering_seek -> epsilon   = epsilon;
+
+
+
+    /************************** ACCIONES DE ESTADOS *******************/
+    SteeringBehaviorAction *finding_coin = new SteeringBehaviorAction();
+    finding_coin -> steering_behavior   = priority_steering_coin;
+    finding_coin -> time                = &time;
+
+    SteeringBehaviorAction *seeking_player = new SteeringBehaviorAction();
+    seeking_player -> steering_behavior = priority_steering_seek;
+    seeking_player -> time              = &time;
+
+    /************************ ACCIONES DE TRANSICIONES ***************/
+
+    FindBestPath* calculate_path = new FindBestPath();
+    calculate_path -> follow_path   = follow_path;
+    calculate_path -> graph         = &graph;
+    calculate_path -> target        = &coin.character.position;
+
+    Action *none = new Action();
+
+    /*********************** CONDICIONES ****************************/
+    BoolCondition *check_coin = new BoolCondition();
+    NotCondition  *not_coin   = new NotCondition();
+    check_coin -> condition = &(coin.exists);
+    not_coin ->   condition = check_coin;
+
+
+    /*********************** ESTADOS *******************************/
+    State find_coin, seek_player;
+    find_coin.action    = finding_coin;
+    seek_player.action  = seeking_player;
+    find_coin.transitions.push_back({&seek_player, not_coin, none});
+    seek_player.transitions.push_back({&find_coin, check_coin, calculate_path});
+
+
+    /******************************* MAQUINA DE ESTADOS ************/
+    (competitor -> state_machine).states.push_back(find_coin);
+    (competitor -> state_machine).states.push_back(seek_player);
+
 }

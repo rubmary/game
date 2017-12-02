@@ -76,13 +76,6 @@ public:
  * utilizadas en los estados
  *
  **/
-
-/**
- *
- * Acciones que utilizan steering behavior
- * utilizadas en los estados
- *
- **/
 class SteeringBehaviorAction : public Action {
 public:
     SteeringBehaviour *steering_behavior;

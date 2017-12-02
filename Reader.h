@@ -6,10 +6,18 @@ public:
                     vector <DrawableObject*> &segments,
                     vector<Wall> &W,
                     vector<Color> colors,
-                    bool* &show_map);
+                    bool* &show_map );
+    
     void read_agents(   vector <DrawableObject*> &drawable_edges,
                         Player* &player,
                         Object* &coin,
                         Object* &player_receiver,
-                        Object* &agent_receiver);
+                        Object* &agent_receiver );
+
+    void read_competitor(   Graph &graph,
+                            Character* &competitor,
+                            vector<Wall> &walls,
+                            Player &player,
+                            Object &coin,
+                            double &time );
 };

@@ -33,8 +33,8 @@ public:
  **/
 class State {
 public:
-    Action *action;
+    Action* action;
     vector <Transition> transitions;
-    Action *get_action();
+    Action* get_action();
     vector <Transition> get_transitions();
 };
