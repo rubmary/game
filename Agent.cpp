@@ -1,5 +1,8 @@
 #include "Agent.h"
 
+void Character::update() {
+    state_machine.update() -> execute();
+}
 
 Player::Player(double x, double y, double z, double s){
 	character.position = {x, y, z};

@@ -24,7 +24,7 @@ class Object : public Agent{
 public:
     int node;
     bool exists;
-    void virtual update() {};
+    void virtual update(){};
 };
 
 /**
@@ -37,7 +37,7 @@ public:
 class Character : public Agent {
 public:
     StateMachine state_machine;
-    void virtual update() {};
+    void virtual update();
 };
 
 /**
