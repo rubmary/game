@@ -2,9 +2,9 @@
 
 class Reader {
 public:
-    void read_map(  Graph &graph,
+    void read_map(  Graph* &graph,
                     vector <DrawableObject*> &segments,
-                    vector<Wall> &W,
+                    vector<Wall>* &W,
                     vector<Color> colors,
                     bool* &show_map );
     
@@ -14,10 +14,11 @@ public:
                         Object* &player_receiver,
                         Object* &agent_receiver );
 
-    void read_competitor(   Graph &graph,
+    void read_competitor(   Graph* &graph,
                             Character* &competitor,
-                            vector<Wall> &walls,
-                            Player &player,
-                            Object &coin,
-                            double &time );
+                            vector<Wall>* &walls,
+                            Player* &player,
+                            Object* &coin,
+                            double* &time,
+                            vector<DrawableObject*> &drawable_objects );
 };

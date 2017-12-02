@@ -16,22 +16,28 @@ void Front::draw(){
 Engine::Engine( int width,
                 int height,
                 vector<DrawableObject*> objects,
-                vector <Wall> walls,
-                Graph graph,
+                vector <Wall> *walls,
+                Graph* graph,
                 Player* player,
                 bool* show_map,
+                double* time,
                 Object* coin,
                 Object* player_receiver,
-                Object* agent_receiver) {
+                Object* agent_receiver,
+                vector<Agent*> agents) {
     
     logic.walls  = walls;
     logic.graph  = graph;
     logic.player = player;
     logic.show_map = show_map;
+    logic.time = time;
     logic.coin = coin;
     logic.player_receiver = player_receiver;
     logic.agent_receiver  = agent_receiver;
-    logic.graph.calculate_positions();
+    logic.graph -> calculate_positions();
+    logic.agents = agents;
+    logic.graph -> reset_smell();
+
     front.window.create(VideoMode(width, height),
                         "Game",
                         Style::Default);

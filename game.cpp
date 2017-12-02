@@ -12,22 +12,31 @@ int main(){
     colors[2] = Color::Yellow;
     colors[3] = Color::Red;
 
-    Graph graph;
-    vector <Wall> walls;
+    Graph *graph;
+    vector <Wall> *walls;
     vector <DrawableObject*> objects, drawable_agents;
     vector <Agent*> agents;
     Player* player;
+    Character* competitor;
     Object *coin, *player_receiver, *agent_receiver;
     bool* show_map;
+    double* time;
 
     reader.read_map(graph, objects, walls, colors, show_map);
-    cout << "Lei el mapa" << endl;
+    cout << "Lei mapa" << endl;
     reader.read_agents(drawable_agents, player, coin, player_receiver, agent_receiver);
+    cout << "Lei objetos" << endl;
+    reader.read_competitor(graph, competitor, walls, player, coin, time, drawable_agents);
+
+    agents.push_back(competitor);
     
     for (int i = 0; i < drawable_agents.size(); i++)
         objects.push_back(drawable_agents[i]);
     cout << "Lei los archivos" << endl;
-    Engine engine(1320, 720, objects, walls, graph, player, show_map, coin, player_receiver, agent_receiver);    
+    Engine engine(1320, 720, objects, walls, graph,
+                    player, show_map, time, coin,
+                    player_receiver, agent_receiver,
+                    agents);
     cout << "Cree el engine" << endl;
     engine.start();
     cout << "Sali del engine" << endl;

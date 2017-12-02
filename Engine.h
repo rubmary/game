@@ -33,13 +33,15 @@ public:
     Engine( int width,
             int height,
             vector<DrawableObject*> objects,
-            vector <Wall> walls,
-            Graph graph,
+            vector <Wall> *walls,
+            Graph *graph,
             Player* player,
             bool* show_map,
+            double* time,
             Object* coin,
             Object* player_receiver,
-            Object* agent_receiver);
+            Object* agent_receiver,
+            vector<Agent*> agents);
     /**
      *
      * Iniciar el motor

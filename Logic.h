@@ -13,9 +13,10 @@ struct Logic {
     Player* player;
     Object *coin, *player_receiver, *agent_receiver;
     vector <Agent*> agents;
-    vector <Wall> walls;
-    Graph graph;
+    vector <Wall> *walls;
+    Graph *graph;
     bool* show_map;
+    double* time;
 
     /**
      * update - actualizar logica en un intervalo
