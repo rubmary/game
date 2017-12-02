@@ -66,29 +66,138 @@ struct NodeRecord {
  *
  * Clase Graph:
  * Representacion del mapa del juego
- * n:   Numero de nodos
- *
+ * @n:          Numero de nodos
+ * @E:          edges (arcos) del grafo
+ * @meshes:     cada triangulo del grafo
+ * @positions:  las posiciones de los centroides
+ *              de los nodos del grafo
  **/
 class Graph{
     int n;
     vector <Edge> E;
     vector <Triangle> meshes;
-    vector <int> get_neighbors(int u);
     vector <Vector3 <double> > positions;
 
+    /**
+     *
+     * get_neighbors
+     * retorna los nodos adyacentes a un
+     * nodo especifico
+     **/
+    vector <int> get_neighbors(int u);
+
 public:
+    /**
+     *
+     * Constructor de la clase:
+     * construye el grafo a partir de los arcos
+     **/
     Graph(vector <Edge> E);
-    Vector3<double> position(int node);
+
+    /**
+     *
+     * calculate_positions - calcular posiciones
+     * Hace el preprocesamiento necesario para
+     * luece el preprocesamiento necesario para
+     * lugo retornar las posiciones en O(1) en
+     * tiempo
+     **/
     void calculate_positions();
-    int node(int previous, Vector3 <double> position);
+
+    /**
+     *
+     * position - posicion
+     * retorna la posicion de un nodo dado
+     **/
+    Vector3<double> position(int node);
+
+    /**
+     *
+     * node
+     * Devuelve el identificador del nodo
+     * correspondiente a la posicion dada
+     **/
     int node(Vector3<double> pos);
+
+    /**
+     *
+     * node
+     * Devuelve el identificador del nodo
+     * correspondiente a la posicion dada,
+     * sabiendo el nodo previo
+     **/
+    int node(int previous, Vector3 <double> position);
+
+    /**
+     *
+     * find_path
+     * encuentra el camino mas corto entre dos puntos
+     * del mapa
+     **/
     Path find_path(Vector3 <double> start, Vector3<double> end);
+
+    /**
+     *
+     * find_path
+     * encuentra el camino mas corto entre dos puntos
+     * del mapa, conociendo los nodos correspondientes
+     **/
     Path find_path(int start, int end);
+
+    /**
+     *
+     * A_star
+     * aplica el algoritmo de A* para encontrar
+     * el camino mas corto
+     **/
     vector<int> A_star(int start, int end);
+
+    /**
+     *
+     * h - euristica
+     * euristica utilizada en el
+     * algoritmo de A*
+     **/
     double h(int i, int j);
+
+    /**
+     *
+     * get_size
+     * retorna la cantidad de nodos del grafo
+     **/
     int get_size();
+
+    /**
+     *
+     * Retorna el triangulo correspondiente
+     * a un nodo
+     **/
     Triangle get_node(int i);
+
+    /**
+     *
+     * reset_smell
+     * quita todos los olores del campo
+     **/
     void reset_smell();
+
+    /**
+     *
+     * produce_smell
+     * Produce olor en un nodo en especifico
+     **/
     void produce_smell(int i, int val);
+
+    /**
+     *
+     * update_smell
+     * propaga el olor en el campo
+     **/
     void update_smell();
+
+    /**
+     *
+     * follow_smell
+     **/
+    int follow_smell(int current_node);
 };

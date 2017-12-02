@@ -76,11 +76,41 @@ public:
  * utilizadas en los estados
  *
  **/
+
+/**
+ *
+ * Acciones que utilizan steering behavior
+ * utilizadas en los estados
+ *
+ **/
 class SteeringBehaviorAction : public Action {
 public:
     SteeringBehaviour *steering_behavior;
     double *time;
+    virtual void execute();
+};
+
+
+class FindNode : public Action {
+public:
+    Seek *seek;
+    int *node;
+    Graph *graph;
     void execute();
+};
+
+
+/**
+ *
+ * Acciones para seguir el olor
+ *
+ **/
+class FollowSmell : public SteeringBehaviorAction {
+public:
+    Graph *graph;
+    Seek *seek;
+    int *node;
+    virtual void execute();
 };
 
 /**

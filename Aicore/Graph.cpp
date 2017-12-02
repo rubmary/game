@@ -230,3 +230,19 @@ void Graph::update_smell(){
 void Graph::produce_smell(int val, int i) {
     meshes[i].smell += val;
 }
+
+int Graph::follow_smell(int node) {
+    vector<int> neighbors = get_neighbors(node);
+    int best_node, max_smell;
+    best_node = node;
+    max_smell = meshes[node].smell;
+
+    for (int i = 0; i < neighbors.size(); i++) {
+        int v = neighbors[i];
+        if (meshes[v].smell > max_smell) {
+            best_node = v;
+            max_smell = meshes[v].smell;
+        }
+    }
+    return best_node;
+}

@@ -1,6 +1,5 @@
 #include "Action.h"
 
-
 template <class T>
 void SetParamAction <T>::execute() {
     *param = value;
@@ -23,11 +22,25 @@ void FindBestPath::execute() {
     follow_path -> segment = 0;
 }
 
-
 void SteeringBehaviorAction::execute() {
     SteeringOutput steering;
     steering_behavior -> getSteering(&steering);
     (steering_behavior -> character) -> integrate(steering, *time);
+}
+
+
+void FindNode::execute() {
+    *node = graph -> node(seek -> character -> position);
+    *(seek -> target) = graph -> position(*node);
+}
+
+void FollowSmell::execute() {
+    if (magnitude(*(seek -> target) - (seek -> character -> position)) < EPS){
+        *node = graph -> follow_smell(*node);
+        *(seek -> target) = graph -> position(*node);
+    }
+    steering_behavior = seek;
+    SteeringBehaviorAction::execute();
 }
 
 void MultipleActionsAction::execute() {
