@@ -42,6 +42,14 @@ void FollowSmell::execute() {
     SteeringBehaviorAction::execute();
 }
 
+void RandomMovement::execute() {
+    if (magnitude(*(seek -> target) - (seek -> character -> position)) < 50){
+        *node = graph -> random_movement(*node);
+        *(seek -> target) = graph -> position(*node);
+    }
+    SteeringBehaviorAction::execute();
+}
+
 void MultipleActionsAction::execute() {
     for (int i = 0; i < (int) actions.size(); i++)
         actions[i] -> execute();

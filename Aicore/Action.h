@@ -95,8 +95,7 @@ public:
 
 /**
  *
- * Acciones para seguir el olor
- *
+ * Accion para seguir el olor
  **/
 class FollowSmell : public SteeringBehaviorAction {
 public:
@@ -108,8 +107,21 @@ public:
 
 /**
  *
- * Realiza multiples acciones
+ * Accion para estar aleatoriamente
+ * en una zona
  *
+ **/
+class RandomMovement : public SteeringBehaviorAction {
+public:
+    Graph *graph;
+    Seek  *seek;
+    int   *node;
+    virtual void execute();
+};
+
+/**
+ *
+ * Realiza multiples acciones
  **/
 class MultipleActionsAction : public Action {
 public:

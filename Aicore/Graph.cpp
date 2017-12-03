@@ -237,6 +237,16 @@ void Graph::produce_smell(int node, int value) {
     meshes[node].smell += value;
 }
 
+
+int Graph::random_movement(int node) {
+
+    vector <int> neighbors = get_neighbors(node);
+    int index = rand() % (neighbors.size() + 1);
+    if (index == neighbors.size())
+        return node;
+    return neighbors[index];
+}
+
 int Graph::follow_smell(int node) {
     vector<int> neighbors = get_neighbors(node);
     int best_node, max_smell;
@@ -259,12 +269,5 @@ int Graph::follow_smell(int node) {
         if (max_smell > meshes[v].smell)
             return best_node;
     }
-
-    int index = rand() % (neighbors.size() + 1);
-    if (index == neighbors.size())
-        best_node = node;
-    else
-        best_node = neighbors[index];
-
-    return best_node;
+    return random_movement(node);
 }

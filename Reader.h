@@ -21,4 +21,12 @@ public:
                             Object* &coin,
                             double* &time,
                             vector<DrawableObject*> &drawable_objects );
+    void read_vigilant( Graph* &graph,
+                        Character* &vigilant,
+                        // Character* &competitor,
+                        vector<Wall>* &walls,
+                        Player* &player,
+                        Object* &coin,
+                        double* &time,
+                        vector<DrawableObject*> &drawable_agents);
 };

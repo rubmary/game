@@ -198,6 +198,14 @@ public:
 
     /**
      *
+     * random_movement
+     * elegir un nuevo nodo de forma aleatoria
+     * entre el nodo actual y los nodos vecinos
+     **/
+    int random_movement(int current_node);
+
+    /**
+     *
      * follow_smell
      **/
     int follow_smell(int current_node);

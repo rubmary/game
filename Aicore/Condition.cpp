@@ -18,7 +18,7 @@ bool BoolCondition::test() {
 }
 
 bool RandomCondition::test() {
-    return rand()%2;
+    return rand()%q < p;
 }
 
 bool TimerCondition::test() {

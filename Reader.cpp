@@ -235,3 +235,119 @@ void Reader::read_competitor(   Graph* &graph,
     drawable_agent = new DrawableAgent(competitor->character, Color::Magenta, size);
     drawable_agents.push_back(drawable_agent);
 }
+
+void Reader::read_vigilant( Graph* &graph,
+                            Character* &vigilant,
+                            // Character* &competitor,
+                            vector<Wall>* &walls,
+                            Player* &player,
+                            Object* &coin,
+                            double* &time,
+                            vector<DrawableObject*> &drawable_agents)
+{
+    ifstream file("vigilant.txt");
+    double epsilon;
+    file >> epsilon;
+
+    /******************************* VIGILANT **********************/
+    vigilant = new Character();
+    double x, z, max_speed;
+    file >> x >> z >> max_speed;
+    (vigilant -> character).position = {x, 0, z};
+    (vigilant -> character).max_speed = max_speed;
+
+    cout << "Hice vigilante" << endl;
+
+    /************************ EVITAR PAREDES **********************/
+    // Evitar paredes
+    double lookahead, avoid_distance, max_acc_obstacle;
+    file >> lookahead >> avoid_distance >> max_acc_obstacle;
+    ObstacleAvoidance* obstacle_avoidance = new ObstacleAvoidance();
+    obstacle_avoidance -> lookahead = lookahead;
+    obstacle_avoidance -> avoid_distance = avoid_distance;
+    obstacle_avoidance -> max_acceleration = max_acc_obstacle;
+    (obstacle_avoidance -> collision_detector).walls = walls;
+
+
+    cout << "Hice evitador de obstaculos" << endl;
+
+    /******************************  DESCANSAR *******************/
+
+    // Hacer Arrive
+    double max_acc_arrive, max_speed_arrive, target_radius, slow_radius, time_to_target;
+    file >> max_acc_arrive >> max_speed_arrive;
+    file >> target_radius >> slow_radius >> time_to_target;
+    Arrive *arrive = new Arrive();
+    arrive -> target = &(coin -> character.position);
+    arrive -> max_acceleration = max_acc_arrive;
+    arrive -> max_speed = max_speed_arrive;
+    arrive -> target_radius = target_radius;
+    arrive -> slow_radius = slow_radius;
+    arrive -> time_to_target = time_to_target;
+
+    // Hacer priority steering
+    PrioritySteering *priority_steering_rest    = new PrioritySteering();
+    (priority_steering_rest -> behaviours).resize(2);
+    (priority_steering_rest -> behaviours)[0] = obstacle_avoidance;
+    (priority_steering_rest -> behaviours)[1] = arrive;
+    priority_steering_rest -> character = &(vigilant -> character);
+    priority_steering_rest -> epsilon   = epsilon;
+
+    cout << "Arrive para descansar" << endl;
+
+    /*********************** VIGILAR EN LA MISMA ZONA *******************/
+    // Seek
+    double max_acc_seek;
+    file >> max_acc_seek;
+    Seek *seek = new Seek();
+    seek -> target = new Vector3 <double> ((vigilant -> character).position);
+    seek -> max_acceleration = max_acc_seek;
+    seek -> character = &(vigilant -> character);
+
+    // Hacer priority steering
+    PrioritySteering *priority_steering_guard = new PrioritySteering();
+    (priority_steering_guard -> behaviours).resize(2);
+    (priority_steering_guard-> behaviours)[0] = obstacle_avoidance;
+    (priority_steering_guard-> behaviours)[1] = seek;
+    priority_steering_guard -> character = &(vigilant -> character);
+    priority_steering_guard -> epsilon   = epsilon;
+
+    cout << "Seek para vigilar en la zona" << endl;
+
+    /**************************** ACCIONES DE ESTADOS **********************/
+    Action* nothing = new Action();
+
+    SteeringBehaviorAction *resting = new SteeringBehaviorAction();
+    resting -> steering_behavior   = priority_steering_rest;
+    resting -> time                = time;
+
+    int *node = new int();
+    RandomMovement* random_moving = new RandomMovement();
+    random_moving -> time = time;
+    random_moving -> graph = graph;
+    random_moving -> steering_behavior = priority_steering_guard;
+    random_moving -> seek = seek;
+    random_moving -> node = node;
+
+
+    /************************ ACCIONES DE TRANSICIONES *****************/
+    FindNode *find_node = new FindNode();
+    find_node -> seek = seek;
+    find_node -> node = node;
+    find_node -> graph = graph;
+
+
+    /**************************** CONDICIIONES **************************/
+    RandomCondition* random_rest_guard;
+    int p_rg, q_rg;
+    file >> p_rg >> q_rg;
+    random_rest_guard -> p = p_rg;
+    random_rest_guard -> q = q_rg;
+
+    RandomCondition* random_guar_rest;
+    int p_gr, q_gr;
+    file >> p_gr >> q_gr;
+    random_guar_rest -> p = p_gr;
+    random_guar_rest -> q = q_gr;
+
+}

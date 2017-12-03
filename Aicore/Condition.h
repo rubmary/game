@@ -109,6 +109,7 @@ public:
  **/
 class RandomCondition : public Condition {
 public:
+    int p, q;
     bool test();
 };
 
