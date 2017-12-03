@@ -12,7 +12,7 @@ void Logic::update(double t){
         graph -> produce_smell(source, smell_value);
     else
         source = -1;
-    graph -> update_smell(agent_receiver -> node, smell_value);
+    graph -> update_smell(source, smell_value);
 }
 
 void Logic::on_map() {

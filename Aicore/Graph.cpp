@@ -226,7 +226,10 @@ void Graph::update_smell(int source, int val){
         for (int j = 0; j < neighbors.size(); j++)
             meshes[neighbors[j]].smell += val;
     }
-    if (source != -1)
+    if (source == -1){
+        for (int i = 0; i < n; i++)
+            meshes[i].smell -= meshes[i].smell/4;
+    }else
         meshes[source].smell += 2*val;
 }
 
