@@ -16,6 +16,11 @@ void FindBestSegmentAction::execute() {
     follow_path -> end_path = false;
 }
 
+void ChooseRandomPosition::execute() {
+    int node    = rand() % (graph -> get_size());
+    target      = graph -> position(node);
+}
+
 void FindBestPath::execute() {
     follow_path -> path = graph -> find_path(follow_path -> character -> position, *target);
     follow_path -> end_path = false;

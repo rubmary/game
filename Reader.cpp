@@ -313,6 +313,26 @@ void Reader::read_vigilant( Graph* &graph,
 
     cout << "Seek para vigilar en la zona" << endl;
 
+
+    /************************* MOVERSE A OTRA POSICION ********************/
+    // follow path
+
+    double path_offset, max_acc_follow_path;
+    file >> path_offset >> max_acc_follow_path;
+    FollowPath* follow_path = new FollowPath();
+    follow_path -> path_offset = path_offset;
+    follow_path -> max_acceleration = max_acc_follow_path;
+    follow_path -> character = &(vigilant -> character);
+
+    PrioritySteering *priority_steering_move = new PrioritySteering();
+    (priority_steering_move -> behaviours).resize(2);
+    (priority_steering_move-> behaviours)[0] = obstacle_avoidance;
+    (priority_steering_move-> behaviours)[1] = follow_path;
+    priority_steering_move -> character = &(vigilant -> character);
+    priority_steering_move -> epsilon   = epsilon;
+
+    cout << "Hice seguir moneda" << endl;
+
     /**************************** ACCIONES DE ESTADOS **********************/
 
     // Nada
@@ -332,12 +352,31 @@ void Reader::read_vigilant( Graph* &graph,
     random_moving -> seek = seek;
     random_moving -> node = node;
 
+    // Moverse
+    SteeringBehaviorAction *moving  = new SteeringBehaviorAction();
+    moving -> steering_behavior     = priority_steering_move;
+    moving -> time                  = time;
+
 
     /************************ ACCIONES DE TRANSICIONES *****************/
     FindNode *find_node = new FindNode();
     find_node -> seek = seek;
     find_node -> node = node;
     find_node -> graph = graph;
+
+
+    ChooseRandomPosition *choose_position = new ChooseRandomPosition();
+    choose_position -> graph = graph;
+
+    FindBestPath* calculate_path = new FindBestPath();
+    calculate_path -> follow_path   = follow_path;
+    calculate_path -> graph         = graph;
+    calculate_path -> target        = &(choose_position -> target);
+
+    MultipleActionsAction *create_path = new MultipleActionsAction();
+    (create_path -> actions).resize(2);
+    (create_path -> actions)[0] = choose_position;
+    (create_path -> actions)[1] = calculate_path;
 
 
     /**************************** CONDICIIONES **************************/
@@ -356,12 +395,19 @@ void Reader::read_vigilant( Graph* &graph,
     BoolCondition* always_true = new BoolCondition();
     always_true -> condition = new bool(true);
 
+    RandomCondition* change_position = new RandomCondition();
+    int p_cp, q_cp;
+    file >> p_cp >> q_cp;
+    change_position -> p = p_cp;
+    change_position -> q = q_cp;
+
 
     /********************************* MAQUINA DE ESTADOS **********************/
     (vigilant -> state_machine).states.resize(5);
     State &initial_state    = (vigilant -> state_machine).states[0];
     State &rest             = (vigilant -> state_machine).states[1];
     State &guard            = (vigilant -> state_machine).states[2];
+    State &move             = (vigilant -> state_machine).states[3];
 
     (vigilant -> state_machine).initial_state = &initial_state;
     (vigilant -> state_machine).current_state = &initial_state;
@@ -371,10 +417,14 @@ void Reader::read_vigilant( Graph* &graph,
     initial_state.action    = none;
     rest.action             = resting;
     guard.action            = random_moving;
+    move.action             = moving;
 
     initial_state.transitions.push_back({&guard, always_true, find_node});
     rest.transitions.push_back({&guard, random_rest_guard, none});
+    rest.transitions.push_back({&move, change_position, create_path});
     guard.transitions.push_back({&rest, random_guard_rest, none});
+    guard.transitions.push_back({&move, change_position, create_path});
+
 
     cout << "maquina de estados" << endl;
 

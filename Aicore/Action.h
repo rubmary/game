@@ -55,6 +55,18 @@ public:
 
 /**
  *
+ * Elige un nodo aleatorio del grafo
+ *
+ **/
+class ChooseRandomPosition : public Action {
+public:
+    Vector3 <double> target;
+    Graph *graph;
+    virtual void execute();
+};
+
+/**
+ *
  * Apunta a un steering behavior del tipo
  * FollowPath y tiene un target en especifico
  * calcula el mejor camino del caracter al
@@ -64,7 +76,6 @@ public:
 class FindBestPath : public Action {
 public:
     Vector3 <double> *target;
-    // int *start, *end;
     FollowPath *follow_path;
     Graph *graph;
     void execute();
