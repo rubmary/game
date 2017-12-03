@@ -213,22 +213,25 @@ void Graph::reset_smell(){
         meshes[i].smell = 0;
 }
 
-void Graph::update_smell(){
+void Graph::update_smell(int source, int val){
     vector <int> prev_smell(n);
     for (int i = 0; i < n; i++)
         prev_smell[i] = meshes[i].smell;
     reset_smell();
     for (int i = 0; i < n; i++) {
-        int val = (prev_smell[i]*9/10)/5;
-        meshes[i].smell += 2*val;
         vector<int> neighbors = get_neighbors(i);
+        int ns = neighbors.size();
+        int val = (prev_smell[i])/5;
+        meshes[i].smell += (5 - ns)*val;
         for (int j = 0; j < neighbors.size(); j++)
             meshes[neighbors[j]].smell += val;
     }
+    if (source != -1)
+        meshes[source].smell += 2*val;
 }
 
-void Graph::produce_smell(int val, int i) {
-    meshes[i].smell += val;
+void Graph::produce_smell(int node, int value) {
+    meshes[node].smell += value;
 }
 
 int Graph::follow_smell(int node) {
@@ -244,5 +247,21 @@ int Graph::follow_smell(int node) {
             max_smell = meshes[v].smell;
         }
     }
+
+    if (max_smell > meshes[node].smell)
+        return best_node;
+
+    for (int i = 0; i < neighbors.size(); i++) {
+        int v = neighbors[i];
+        if (max_smell > meshes[v].smell)
+            return best_node;
+    }
+
+    int index = rand() % (neighbors.size() + 1);
+    if (index == neighbors.size())
+        best_node = node;
+    else
+        best_node = neighbors[index];
+
     return best_node;
 }

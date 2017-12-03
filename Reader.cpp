@@ -156,35 +156,37 @@ void Reader::read_competitor(   Graph* &graph,
     cout << "Primer priority steering" << endl;
 
 
-    /*********************** SEEK (TEMPORAL) *********************/
+    /*********************** SEEK FOLLOW SMELL *********************/
 
     // Seek
     double max_acc_seek;
     file >> max_acc_seek;
     Seek *seek = new Seek();
-    seek -> target = &(player -> character.position);
+    seek -> target = new Vector3 <double> ((competitor -> character).position);
     seek -> max_acceleration = max_acc_seek;
-
-    PrioritySteering *priority_steering_seek = new PrioritySteering();
-    (priority_steering_seek -> behaviours).resize(2);
-    (priority_steering_seek -> behaviours)[0] = obstacle_avoidance;
-    (priority_steering_seek -> behaviours)[1] = seek;
-    priority_steering_seek -> character = &(competitor -> character);
-    priority_steering_seek -> epsilon   = epsilon;
+    seek -> character = &(competitor -> character);
 
     cout << "Seek" << endl;
 
     /************************** ACCIONES DE ESTADOS *******************/
+    int *node = new int();
+    FollowSmell* following_smell = new FollowSmell();
+    following_smell -> time = time;
+    following_smell -> graph = graph;
+    following_smell -> seek = seek;
+    following_smell -> node = node;
+
+
     SteeringBehaviorAction *finding_coin = new SteeringBehaviorAction();
     finding_coin -> steering_behavior   = priority_steering_coin;
     finding_coin -> time                = time;
 
-    SteeringBehaviorAction *seeking_player = new SteeringBehaviorAction();
-    seeking_player -> steering_behavior = priority_steering_seek;
-    seeking_player -> time              = time;
-
     cout << "Acciones de estados" << endl;
     /************************ ACCIONES DE TRANSICIONES ***************/
+    FindNode *find_node = new FindNode();
+    find_node -> seek = seek;
+    find_node -> node = node;
+    find_node -> graph = graph;
 
     FindBestPath* calculate_path = new FindBestPath();
     calculate_path -> follow_path   = follow_path;
@@ -205,17 +207,17 @@ void Reader::read_competitor(   Graph* &graph,
     /******************************* MAQUINA DE ESTADOS ************/
     (competitor -> state_machine).states.resize(2);
     State &find_coin = (competitor -> state_machine).states[0];
-    State &seek_player = (competitor -> state_machine).states[1];
+    State &follow_smell = (competitor -> state_machine).states[1];
 
-    (competitor -> state_machine).initial_state = &seek_player;
-    (competitor -> state_machine).current_state = &seek_player;
+    (competitor -> state_machine).initial_state = &follow_smell;
+    (competitor -> state_machine).current_state = &follow_smell;
 
 
     /************************** ESTADOS *******************************/
     find_coin.action    = finding_coin;
-    seek_player.action  = seeking_player;
-    find_coin.transitions.push_back({&seek_player, not_coin, none});
-    seek_player.transitions.push_back({&find_coin, check_coin, calculate_path});
+    follow_smell.action  = following_smell;
+    find_coin.transitions.push_back({&follow_smell, not_coin, find_node});
+    follow_smell.transitions.push_back({&find_coin, check_coin, calculate_path});
     cout << "maquina de estados" << endl;
 
     /******************* OBJETO DIBUJABLE **************************/

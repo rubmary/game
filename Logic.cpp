@@ -1,12 +1,18 @@
 #include <cstdlib>
 #include "Logic.h"
+#define smell_value 100000
 
 void Logic::update(double t){
     *time = t;
     player -> update(*time);
     for (int i = 0; i < agents.size(); i++)
         agents[i] -> update();
-    graph -> update_smell();
+    int source = agent_receiver -> node;
+    if (agent_receiver -> exists)
+        graph -> produce_smell(source, smell_value);
+    else
+        source = -1;
+    graph -> update_smell(agent_receiver -> node, smell_value);
 }
 
 void Logic::on_map() {

@@ -35,7 +35,7 @@ void FindNode::execute() {
 }
 
 void FollowSmell::execute() {
-    if (magnitude(*(seek -> target) - (seek -> character -> position)) < EPS){
+    if (magnitude(*(seek -> target) - (seek -> character -> position)) < 50){
         *node = graph -> follow_smell(*node);
         *(seek -> target) = graph -> position(*node);
     }

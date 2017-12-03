@@ -84,6 +84,7 @@ class Graph{
      * retorna los nodos adyacentes a un
      * nodo especifico
      **/
+    public: // temporal
     vector <int> get_neighbors(int u);
 
 public:
@@ -186,14 +187,14 @@ public:
      * produce_smell
      * Produce olor en un nodo en especifico
      **/
-    void produce_smell(int i, int val);
+    void produce_smell(int node, int val);
 
     /**
      *
      * update_smell
      * propaga el olor en el campo
      **/
-    void update_smell();
+    void update_smell(int source, int val);
 
     /**
      *
