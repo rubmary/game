@@ -62,7 +62,7 @@ public:
     Path path;
     double path_offset;
     int segment;
-    double end_path;
+    bool end_path;
     FollowPath(Path path, double path_offset);
     virtual void getSteering(SteeringOutput* output);
 };

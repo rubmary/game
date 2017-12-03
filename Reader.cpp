@@ -401,6 +401,9 @@ void Reader::read_vigilant( Graph* &graph,
     change_position -> p = p_cp;
     change_position -> q = q_cp;
 
+    BoolCondition* end_path = new BoolCondition();
+    end_path -> condition = &(follow_path -> end_path);
+
 
     /********************************* MAQUINA DE ESTADOS **********************/
     (vigilant -> state_machine).states.resize(5);
@@ -421,9 +424,9 @@ void Reader::read_vigilant( Graph* &graph,
 
     initial_state.transitions.push_back({&guard, always_true, find_node});
     rest.transitions.push_back({&guard, random_rest_guard, none});
-    rest.transitions.push_back({&move, change_position, create_path});
     guard.transitions.push_back({&rest, random_guard_rest, none});
     guard.transitions.push_back({&move, change_position, create_path});
+    move.transitions.push_back({&guard, end_path, find_node});
 
 
     cout << "maquina de estados" << endl;
