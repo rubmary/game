@@ -333,6 +333,23 @@ void Reader::read_vigilant( Graph* &graph,
 
     cout << "Hice seguir moneda" << endl;
 
+
+    /***************************** PERSEGUIR AL JUGADOR **********************/
+    // seek
+    double max_acc_seek_player;
+    file >> max_acc_seek_player;
+    Seek *seek_player = new Seek();
+    seek_player -> target = &(player -> character).position;
+    seek_player -> max_acceleration = max_acc_seek_player;
+
+    PrioritySteering *priority_steering_seek_player = new PrioritySteering();
+    (priority_steering_seek_player -> behaviours).resize(2);
+    (priority_steering_seek_player-> behaviours)[0] = obstacle_avoidance;
+    (priority_steering_seek_player-> behaviours)[1] = seek_player;
+    priority_steering_seek_player -> character = &(vigilant -> character);
+    priority_steering_seek_player -> epsilon   = epsilon;
+
+
     /**************************** ACCIONES DE ESTADOS **********************/
 
     // Nada
@@ -357,6 +374,10 @@ void Reader::read_vigilant( Graph* &graph,
     moving -> steering_behavior     = priority_steering_move;
     moving -> time                  = time;
 
+    // Perseguir jugador
+    SteeringBehaviorAction *seeking = new SteeringBehaviorAction();
+    seeking -> steering_behavior    = priority_steering_seek_player;
+    seeking -> time                 = time;
 
     /************************ ACCIONES DE TRANSICIONES *****************/
     FindNode *find_node = new FindNode();
@@ -404,6 +425,16 @@ void Reader::read_vigilant( Graph* &graph,
     BoolCondition* end_path = new BoolCondition();
     end_path -> condition = &(follow_path -> end_path);
 
+    double lookahead_follow_player;
+    file >> lookahead_follow_player;
+    SeeTargetCondition* see_player  = new SeeTargetCondition();
+    see_player -> character     = &(vigilant -> character);
+    see_player -> target        = &(player -> character).position;
+    see_player -> lookahead     = new double (lookahead_follow_player);
+
+    NotCondition* no_see_player = new NotCondition();
+    no_see_player -> condition = see_player;
+
 
     /********************************* MAQUINA DE ESTADOS **********************/
     (vigilant -> state_machine).states.resize(5);
@@ -411,6 +442,7 @@ void Reader::read_vigilant( Graph* &graph,
     State &rest             = (vigilant -> state_machine).states[1];
     State &guard            = (vigilant -> state_machine).states[2];
     State &move             = (vigilant -> state_machine).states[3];
+    State &follow_player    = (vigilant -> state_machine).states[4];
 
     (vigilant -> state_machine).initial_state = &initial_state;
     (vigilant -> state_machine).current_state = &initial_state;
@@ -421,12 +453,17 @@ void Reader::read_vigilant( Graph* &graph,
     rest.action             = resting;
     guard.action            = random_moving;
     move.action             = moving;
+    follow_player.action    = seeking;
 
     initial_state.transitions.push_back({&guard, always_true, find_node});
+    rest.transitions.push_back({&follow_player, see_player, none});
     rest.transitions.push_back({&guard, random_rest_guard, none});
+    guard.transitions.push_back({&follow_player, see_player, none});
     guard.transitions.push_back({&rest, random_guard_rest, none});
     guard.transitions.push_back({&move, change_position, create_path});
+    move.transitions.push_back({&follow_player, see_player, none});
     move.transitions.push_back({&guard, end_path, find_node});
+    follow_player.transitions.push_back({&guard, no_see_player, find_node});
 
 
     cout << "maquina de estados" << endl;

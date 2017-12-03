@@ -126,7 +126,7 @@ public:
 class SeeTargetCondition : public Condition {
 public:
     Vector3 <double> *target;
-    Location *character;
+    Kinematic *character;
     double *lookahead;
     bool test();
 };
