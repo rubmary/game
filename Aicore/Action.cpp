@@ -39,7 +39,6 @@ void FollowSmell::execute() {
         *node = graph -> follow_smell(*node);
         *(seek -> target) = graph -> position(*node);
     }
-    steering_behavior = seek;
     SteeringBehaviorAction::execute();
 }
 

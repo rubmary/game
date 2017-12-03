@@ -156,7 +156,7 @@ void Reader::read_competitor(   Graph* &graph,
     cout << "Primer priority steering" << endl;
 
 
-    /*********************** SEEK FOLLOW SMELL *********************/
+    /*********************** FOLLOW SMELL *********************/
 
     // Seek
     double max_acc_seek;
@@ -166,6 +166,13 @@ void Reader::read_competitor(   Graph* &graph,
     seek -> max_acceleration = max_acc_seek;
     seek -> character = &(competitor -> character);
 
+    PrioritySteering *priority_steering_smell = new PrioritySteering();
+    (priority_steering_smell -> behaviours).resize(2);
+    (priority_steering_smell-> behaviours)[0] = obstacle_avoidance;
+    (priority_steering_smell-> behaviours)[1] = seek;
+    priority_steering_smell -> character = &(competitor -> character);
+    priority_steering_smell -> epsilon   = epsilon;
+
     cout << "Seek" << endl;
 
     /************************** ACCIONES DE ESTADOS *******************/
@@ -173,6 +180,7 @@ void Reader::read_competitor(   Graph* &graph,
     FollowSmell* following_smell = new FollowSmell();
     following_smell -> time = time;
     following_smell -> graph = graph;
+    following_smell -> steering_behavior = priority_steering_smell;
     following_smell -> seek = seek;
     following_smell -> node = node;
 
