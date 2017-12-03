@@ -277,7 +277,7 @@ void Reader::read_vigilant( Graph* &graph,
     file >> max_acc_arrive >> max_speed_arrive;
     file >> target_radius >> slow_radius >> time_to_target;
     Arrive *arrive = new Arrive();
-    arrive -> target = &(coin -> character.position);
+    arrive -> target = &(vigilant -> character.position);
     arrive -> max_acceleration = max_acc_arrive;
     arrive -> max_speed = max_speed_arrive;
     arrive -> target_radius = target_radius;
@@ -375,5 +375,12 @@ void Reader::read_vigilant( Graph* &graph,
     initial_state.transitions.push_back({&guard, always_true, find_node});
     rest.transitions.push_back({&guard, random_rest_guard, none});
     guard.transitions.push_back({&rest, random_guard_rest, none});
+
     cout << "maquina de estados" << endl;
+
+    int size;
+    file >> size;
+    DrawableObject* drawable_agent;
+    drawable_agent = new DrawableAgent(vigilant->character, Color::Cyan, size);
+    drawable_agents.push_back(drawable_agent);
 }

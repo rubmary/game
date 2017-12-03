@@ -17,7 +17,7 @@ int main(){
     vector <DrawableObject*> objects, drawable_agents;
     vector <Agent*> agents;
     Player* player;
-    Character* competitor;
+    Character *competitor, *vigilant;
     Object *coin, *player_receiver, *agent_receiver;
     bool* show_map;
     double* time;
@@ -27,9 +27,13 @@ int main(){
     reader.read_agents(drawable_agents, player, coin, player_receiver, agent_receiver);
     cout << "Lei objetos" << endl;
     reader.read_competitor(graph, competitor, walls, player, coin, time, drawable_agents);
-
-    agents.push_back(competitor);
+    cout << "Lei el competidor" << endl;
+    reader.read_vigilant(graph, vigilant, walls, player, coin, time, drawable_agents);
+    cout << "Lei vigilante" << endl;
     
+    agents.push_back(competitor);
+    agents.push_back(vigilant);
+
     for (int i = 0; i < drawable_agents.size(); i++)
         objects.push_back(drawable_agents[i]);
     cout << "Lei los archivos" << endl;
