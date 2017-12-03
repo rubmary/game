@@ -311,3 +311,11 @@ void Graph::calculate_sections() {
             dfs(i, section++);
     }
 }
+
+int Graph::section(int node) {
+    return meshes[node].section;
+}
+
+int Graph::section(Vector3<double> position) {
+    return section(node(position));
+}

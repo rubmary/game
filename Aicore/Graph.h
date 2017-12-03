@@ -244,4 +244,22 @@ public:
      **/
     void calculate_sections();
 
+    /**
+     *
+     * calculate_sections
+     * Calcula las secciones del mapa
+     * calculando las componentes conexas del
+     * mapa usando dfs
+     **/
+    int section(int node);
+
+    /**
+     *
+     * calculate_sections
+     * Calcula las secciones del mapa
+     * calculando las componentes conexas del
+     * mapa usando dfs
+     **/
+    int section(Vector3 <double> position);
+
 };
