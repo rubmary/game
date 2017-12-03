@@ -271,3 +271,43 @@ int Graph::follow_smell(int node) {
     }
     return random_movement(node);
 }
+
+Edge* Graph::find_edge(int u, int v) {
+    Edge* t1[] = {meshes[u].a, meshes[u].b, meshes[u].c};
+    Edge* t2[] = {meshes[v].a, meshes[v].b, meshes[v].c};
+    for (int i = 0; i < 3; i++){
+        for (int j = 0; j < 3; j++){
+            if (t1[i] == t2[j])
+                return t1[i];
+        }
+    }
+    return NULL;
+}
+
+bool Graph::valid_edge(int u, int v) {
+    Edge* edge = find_edge(u, v);
+    if (edge == NULL)
+        return false;
+    int type = edge -> type;
+    return type == 1;
+}
+
+void Graph::dfs(int u, int section) {
+    meshes[u].section = section;
+    vector <int> neighbors = get_neighbors(u);
+    for (int i = 0; i < neighbors.size(); i++) {
+        int v = neighbors[i];
+        if (valid_edge(u, v) && meshes[v].section == -1)
+            dfs(v, section);
+    }
+}
+
+void Graph::calculate_sections() {
+    for (int i = 0; i < n; i++)
+        meshes[i].section = -1;
+    int section = 0;
+    for (int i = 0; i < n; i++){
+        if(meshes[i].section == -1)
+            dfs(i, section++);
+    }
+}

@@ -34,9 +34,10 @@ Engine::Engine( int width,
     logic.coin = coin;
     logic.player_receiver = player_receiver;
     logic.agent_receiver  = agent_receiver;
-    logic.graph -> calculate_positions();
     logic.agents = agents;
+    logic.graph -> calculate_positions();
     logic.graph -> reset_smell();
+    logic.graph -> calculate_sections();
 
     front.window.create(VideoMode(width, height),
                         "Game",

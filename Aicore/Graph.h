@@ -47,6 +47,7 @@ struct Triangle{
         return v1 == v2;
     }
     int smell;
+    int section;
 };
 
 struct NodeRecord {
@@ -84,7 +85,6 @@ class Graph{
      * retorna los nodos adyacentes a un
      * nodo especifico
      **/
-    public: // temporal
     vector <int> get_neighbors(int u);
 
 public:
@@ -209,4 +209,39 @@ public:
      * follow_smell
      **/
     int follow_smell(int current_node);
+
+    /**
+     *
+     * find_edge
+     * encuentra el arco comun en dos
+     * nodos vecino, retorna null si los
+     * nodos no son vecinos
+     **/
+    Edge* find_edge(int u, int v);
+
+    /**
+     *
+     * valid_edge
+     * determina si el arco entre dos
+     * nodos es valido para las secciones
+     **/
+    bool valid_edge(int u, int v);
+
+    /**
+     *
+     * dfs
+     * dfs para encontrar las secciones del
+     * grafo
+     **/
+    void dfs(int node, int section);
+
+    /**
+     *
+     * calculate_sections
+     * Calcula las secciones del mapa
+     * calculando las componentes conexas del
+     * mapa usando dfs
+     **/
+    void calculate_sections();
+
 };
