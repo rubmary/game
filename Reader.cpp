@@ -220,7 +220,6 @@ void Reader::read_competitor(   Graph* &graph,
     (competitor -> state_machine).initial_state = &follow_smell;
     (competitor -> state_machine).current_state = &follow_smell;
 
-
     /************************** ESTADOS *******************************/
     find_coin.action    = finding_coin;
     follow_smell.action  = following_smell;
@@ -315,12 +314,16 @@ void Reader::read_vigilant( Graph* &graph,
     cout << "Seek para vigilar en la zona" << endl;
 
     /**************************** ACCIONES DE ESTADOS **********************/
-    Action* nothing = new Action();
 
+    // Nada
+    Action* none = new Action();
+
+    // Descansar
     SteeringBehaviorAction *resting = new SteeringBehaviorAction();
     resting -> steering_behavior   = priority_steering_rest;
     resting -> time                = time;
 
+    // Vigilar
     int *node = new int();
     RandomMovement* random_moving = new RandomMovement();
     random_moving -> time = time;
@@ -338,16 +341,39 @@ void Reader::read_vigilant( Graph* &graph,
 
 
     /**************************** CONDICIIONES **************************/
-    RandomCondition* random_rest_guard;
+    RandomCondition* random_rest_guard = new RandomCondition();
     int p_rg, q_rg;
     file >> p_rg >> q_rg;
     random_rest_guard -> p = p_rg;
     random_rest_guard -> q = q_rg;
 
-    RandomCondition* random_guar_rest;
+    RandomCondition* random_guard_rest = new RandomCondition();
     int p_gr, q_gr;
     file >> p_gr >> q_gr;
-    random_guar_rest -> p = p_gr;
-    random_guar_rest -> q = q_gr;
+    random_guard_rest -> p = p_gr;
+    random_guard_rest -> q = q_gr;
 
+    BoolCondition* always_true = new BoolCondition();
+    always_true -> condition = new bool(true);
+
+
+    /********************************* MAQUINA DE ESTADOS **********************/
+    (vigilant -> state_machine).states.resize(5);
+    State &initial_state    = (vigilant -> state_machine).states[0];
+    State &rest             = (vigilant -> state_machine).states[1];
+    State &guard            = (vigilant -> state_machine).states[2];
+
+    (vigilant -> state_machine).initial_state = &initial_state;
+    (vigilant -> state_machine).current_state = &initial_state;
+
+    /************************** ESTADOS *******************************/
+
+    initial_state.action    = none;
+    rest.action             = resting;
+    guard.action            = random_moving;
+
+    initial_state.transitions.push_back({&guard, always_true, find_node});
+    rest.transitions.push_back({&guard, random_rest_guard, none});
+    guard.transitions.push_back({&rest, random_guard_rest, none});
+    cout << "maquina de estados" << endl;
 }
