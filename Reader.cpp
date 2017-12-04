@@ -118,9 +118,6 @@ void Reader::read_competitor(   Graph* &graph,
     obstacle_avoidance -> max_acceleration = max_acc_obstacle;
     (obstacle_avoidance -> collision_detector).walls = walls;
 
-
-    cout << "Hice evitador de obstaculos" << endl;
-
     /*************************SEGUIR MONEDA ********************/
     //Seguir moneda
     double path_offset, max_acc_follow_path;
@@ -606,6 +603,15 @@ void Reader::read_friends(    Graph* &graph,
         initial_state.transitions.push_back({&move_shadow, always_true, calculate_path});
         seek_competitor.transitions.push_back({&move_shadow, distinct_section, calculate_path});
         move_shadow.transitions.push_back({&seek_competitor, same_section, none});
+
+        friends.push_back(friend_player);
+
+        /********************************** OBJETO DIBUJABLE ********************/
+        int size;
+        file >> size;
+        DrawableObject* drawable_agent;
+        drawable_agent = new DrawableAgent(friend_player->character, Color(211, 211, 211), size);
+        drawable_agents.push_back(drawable_agent);
     }
     file.close();
 }

@@ -42,16 +42,6 @@ Engine::Engine( int width,
     logic.graph -> reset_smell();
     logic.graph -> calculate_sections();
     logic.set_shadows();
-
-
-    // vector <vector <int>> shadows = logic.graph -> get_shadows();
-    // for (int i = 0; i < shadows.size(); i++) {
-    //     cout << "Seccion " << i << ": ";
-    //     for (int j = 0; j < shadows[i].size(); j++)
-    //         cout << shadows[i][j] << ' ';
-    //     cout << endl;
-    // }
-
     front.window.create(VideoMode(width, height),
                         "Game",
                         Style::Default);

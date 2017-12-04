@@ -31,9 +31,13 @@ int main(){
     cout << "Lei el competidor" << endl;
     reader.read_vigilant(graph, vigilant, walls, player, coin, time, drawable_agents);
     cout << "Lei vigilante" << endl;
-    
+    reader.read_friends(graph, competitor, walls, time, friends, drawable_agents);
+    cout << "Lei amigos" << endl;
+
     agents.push_back(competitor);
     agents.push_back(vigilant);
+    for (int i = 0; i < friends.size(); i++)
+        agents.push_back(friends[i]);
 
     for (int i = 0; i < drawable_agents.size(); i++)
         objects.push_back(drawable_agents[i]);
