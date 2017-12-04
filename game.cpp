@@ -8,7 +8,7 @@ int main(){
 
     vector<Color> colors(4);
     colors[0] = Color(155,64,0);
-    colors[1] = Color(100, 100, 100);
+    colors[1] = Color(25, 0, 51);
     colors[2] = Color::Yellow;
     colors[3] = Color::Red;
 

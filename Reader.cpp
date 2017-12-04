@@ -131,7 +131,6 @@ void Reader::read_competitor(   Graph* &graph,
     (competitor -> character).position = {x, 0, z};
     (competitor -> character).max_speed = max_speed;
     competitor -> graph = graph;
-    cout << "Hice competidor" << endl;
     
     // Evitar paredes
     double lookahead, avoid_distance, max_acc_obstacle;
@@ -150,7 +149,6 @@ void Reader::read_competitor(   Graph* &graph,
     follow_path -> path_offset = path_offset;
     follow_path -> max_acceleration = max_acc_follow_path;
     follow_path -> character = &(competitor -> character);
-    cout << "Hice seguir moneda" << endl;
 
     //Arrive
     double max_acc_arrive, max_speed_arrive, target_radius, slow_radius, time_to_target;
@@ -164,7 +162,6 @@ void Reader::read_competitor(   Graph* &graph,
     arrive -> slow_radius = slow_radius;
     arrive -> time_to_target = time_to_target;
 
-    cout << "Hice arrive" << endl;
     // Crear los steering que se utilizaran en la accion finding_coin
     PrioritySteering *priority_steering_coin    = new PrioritySteering();
     (priority_steering_coin -> behaviours).resize(3);
@@ -174,7 +171,6 @@ void Reader::read_competitor(   Graph* &graph,
     priority_steering_coin -> character = &(competitor -> character);
     priority_steering_coin -> epsilon   = epsilon;
 
-    cout << "Primer priority steering" << endl;
 
 
     /*********************** FOLLOW SMELL *********************/
@@ -194,7 +190,6 @@ void Reader::read_competitor(   Graph* &graph,
     priority_steering_smell -> character = &(competitor -> character);
     priority_steering_smell -> epsilon   = epsilon;
 
-    cout << "Seek" << endl;
 
     /************************** ACCIONES DE ESTADOS *******************/
     int *node = new int();
@@ -210,7 +205,6 @@ void Reader::read_competitor(   Graph* &graph,
     finding_coin -> steering_behavior   = priority_steering_coin;
     finding_coin -> time                = time;
 
-    cout << "Acciones de estados" << endl;
     /************************ ACCIONES DE TRANSICIONES ***************/
     FindNode *find_node = new FindNode();
     find_node -> seek = seek;
@@ -223,7 +217,6 @@ void Reader::read_competitor(   Graph* &graph,
     calculate_path -> target        = &(coin -> character).position;
 
     Action *none = new Action();
-    cout << "Acciones de transiciones" << endl;
 
     /*********************** CONDICIONES ****************************/
     BoolCondition *check_coin = new BoolCondition();
@@ -231,7 +224,6 @@ void Reader::read_competitor(   Graph* &graph,
     check_coin -> condition = &(coin -> exists);
     not_coin ->   condition = check_coin;
 
-    cout << "Condiciones" << endl;
 
     /******************************* MAQUINA DE ESTADOS ************/
     (competitor -> state_machine).states.resize(2);
@@ -246,7 +238,6 @@ void Reader::read_competitor(   Graph* &graph,
     follow_smell.action  = following_smell;
     find_coin.transitions.push_back({&follow_smell, not_coin, find_node});
     follow_smell.transitions.push_back({&find_coin, check_coin, calculate_path});
-    cout << "maquina de estados" << endl;
 
     /******************* OBJETO DIBUJABLE **************************/
     int size;
@@ -276,8 +267,7 @@ void Reader::read_vigilant( Graph* &graph,
     (vigilant -> character).position = {x, 0, z};
     (vigilant -> character).max_speed = max_speed;
     vigilant -> graph = graph;
-    cout << "Hice vigilante" << endl;
-
+    
     /************************ EVITAR PAREDES **********************/
     // Evitar paredes
     double lookahead, avoid_distance, max_acc_obstacle;
@@ -287,9 +277,6 @@ void Reader::read_vigilant( Graph* &graph,
     obstacle_avoidance -> avoid_distance = avoid_distance;
     obstacle_avoidance -> max_acceleration = max_acc_obstacle;
     (obstacle_avoidance -> collision_detector).walls = walls;
-
-
-    cout << "Hice evitador de obstaculos" << endl;
 
     /******************************  DESCANSAR *******************/
 
@@ -312,9 +299,6 @@ void Reader::read_vigilant( Graph* &graph,
     (priority_steering_rest -> behaviours)[1] = arrive;
     priority_steering_rest -> character = &(vigilant -> character);
     priority_steering_rest -> epsilon   = epsilon;
-
-    cout << "Arrive para descansar" << endl;
-
     /*********************** VIGILAR EN LA MISMA ZONA *******************/
     // Seek
     double max_acc_seek;
@@ -332,9 +316,6 @@ void Reader::read_vigilant( Graph* &graph,
     priority_steering_guard -> character = &(vigilant -> character);
     priority_steering_guard -> epsilon   = epsilon;
 
-    cout << "Seek para vigilar en la zona" << endl;
-
-
     /************************* MOVERSE A OTRA POSICION ********************/
     // follow path
 
@@ -351,9 +332,6 @@ void Reader::read_vigilant( Graph* &graph,
     (priority_steering_move-> behaviours)[1] = follow_path;
     priority_steering_move -> character = &(vigilant -> character);
     priority_steering_move -> epsilon   = epsilon;
-
-    cout << "Hice seguir moneda" << endl;
-
 
     /***************************** PERSEGUIR AL JUGADOR **********************/
     // seek
@@ -485,9 +463,6 @@ void Reader::read_vigilant( Graph* &graph,
     move.transitions.push_back({&follow_player, see_player, none});
     move.transitions.push_back({&guard, end_path, find_node});
     follow_player.transitions.push_back({&guard, no_see_player, find_node});
-
-
-    cout << "maquina de estados" << endl;
 
     int size;
     file >> size;
