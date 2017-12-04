@@ -47,17 +47,36 @@ void Player::stop_down() {
     down_pressed = false;
 }
 
+bool Player::valid_position(Vector3<double> position) {
+    for (int i = 0; i < walls.size(); i++){
+        if (distance_point_segment(walls[i].A, walls[i].B, position) < 10)
+            return false;
+    }
+    return true;
+}
+
+int Player::exit_portal(Vector3<double> position) {
+    for (int i = 0; i < exit_portals.size(); i++)
+        if (magnitude(exit_portals[i] - position) < 10)
+            return i;
+    return -1;
+}
+
 void Player::update(double time) {
-
+    Vector3 <double> new_position = character.position;
     if (right_pressed)
-        character.position.x += character.max_speed * time;
-
+        new_position.x += character.max_speed * time;
     if (left_pressed)
-        character.position.x -= character.max_speed * time;
-
+        new_position.x -= character.max_speed * time;
     if (up_pressed)
-        character.position.z += character.max_speed * time;
-
+        new_position.z += character.max_speed * time;
     if (down_pressed)
-        character.position.z -= character.max_speed * time;    
+        new_position.z -= character.max_speed * time;
+
+    if (valid_position(new_position))
+        character.position = new_position;
+
+    int portal = exit_portal(character.position);
+    if (portal != -1)
+        character.position = entry_portals[permutation[portal]];
 }

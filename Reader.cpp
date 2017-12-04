@@ -4,6 +4,7 @@ using namespace std;
 void Reader::read_map ( Graph* &graph,
                         vector <DrawableObject*> &segments,
                         vector<Wall>* &W,
+                        vector<Wall> &player_walls,
                         vector<Color> colors,
                         bool* &show_map)
 {
@@ -35,8 +36,11 @@ void Reader::read_map ( Graph* &graph,
     W = new vector<Wall>;
     for (int i = 0; i < edges.size(); i++) {
         if (!edges[i].valid)
-            W -> push_back({ {edges[i].A.first, 0, edges[i].A.second},
-                          {edges[i].B.first, 0, edges[i].B.second} });
+            W -> push_back({{edges[i].A.first, 0, edges[i].A.second},
+                            {edges[i].B.first, 0, edges[i].B.second} });  
+        if (edges[i].type != 1)
+            player_walls.push_back({{edges[i].A.first, 0, edges[i].A.second},
+                                    {edges[i].B.first, 0, edges[i].B.second} });
     }
     file.close();
 }
@@ -45,7 +49,8 @@ void Reader::read_agents(vector <DrawableObject*> &drawable_agents,
                          Player*    &player,
                          Object*    &coin,
                          Object*    &player_receiver,
-                         Object*    &agent_receiver)
+                         Object*    &agent_receiver,
+                         vector <Wall> &player_walls)
 {
     int N;
     ifstream file("Agents.txt");
@@ -63,6 +68,24 @@ void Reader::read_agents(vector <DrawableObject*> &drawable_agents,
             player = new Player(x, y, z, speed);
             drawable_agent = new DrawableAgent(player->character, Color::White, size);
             drawable_agents.push_back(drawable_agent);
+            int N, size;
+            file >> N >> size;
+            (player -> entry_portals).resize(4);
+            (player -> exit_portals).resize(4);
+            (player -> permutation).resize(4);
+            for (int i = 0; i < N; i++){
+                double x1, z1, x2, z2;
+                file >> x1 >> z1 >> x2 >> z2;
+                (player -> entry_portals)[i]    = {x1, 0, z1};
+                (player -> exit_portals)[i]     = {x2, 0, z2};
+                DrawablePortal *drawable_entry_portal, *drawable_exit_portal;
+                drawable_entry_portal   = new DrawablePortal(x1, z1, size, Color::Red);
+                drawable_exit_portal    = new DrawablePortal(x2, z2, size, Color::Blue);
+                drawable_agents.push_back(drawable_entry_portal);
+                drawable_agents.push_back(drawable_exit_portal);
+            }
+            for (int i = 0; i < N; i++)
+                file >> (player -> permutation)[i];
         }else if(type == 1) {
             file >> size;
             coin = new Object();
@@ -83,6 +106,7 @@ void Reader::read_agents(vector <DrawableObject*> &drawable_agents,
             drawable_agents.push_back(drawable_agent);
         }
     }
+    player -> walls = player_walls;
     file.close();
 }
 

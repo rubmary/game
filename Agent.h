@@ -65,7 +65,27 @@ class Player : public Agent {
     bool right_pressed;
     bool up_pressed;
     bool down_pressed;
+    /**
+     *
+     * valid_position
+     * determina si la posicion es valida
+     * lo cual ocurre si no esta demasiado cerca
+     * de alguna pared
+     *
+     **/
+    bool valid_position(Vector3<double> position);
+
+    /**
+     *
+     * Portal de salida
+     **/
+    int exit_portal(Vector3 <double> position);
+
 public:
+    vector <Vector3 <double> > entry_portals, exit_portals;
+    vector <int> permutation;
+    
+    vector <Wall> walls;
     Player(double x, double y, double z, double speed);
     
     /**

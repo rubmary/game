@@ -8,12 +8,12 @@ int main(){
 
     vector<Color> colors(4);
     colors[0] = Color(155,64,0);
-    colors[1] = Color::Blue;
+    colors[1] = Color(100, 100, 100);
     colors[2] = Color::Yellow;
     colors[3] = Color::Red;
 
     Graph *graph;
-    vector <Wall> *walls;
+    vector <Wall> *walls, player_walls;
     vector <DrawableObject*> objects, drawable_agents;
     vector <Agent*> agents;
     vector <Friend*> friends;
@@ -23,9 +23,9 @@ int main(){
     bool* show_map;
     double* time;
 
-    reader.read_map(graph, objects, walls, colors, show_map);
+    reader.read_map(graph, objects, walls, player_walls, colors, show_map);
     cout << "Lei mapa" << endl;
-    reader.read_agents(drawable_agents, player, coin, player_receiver, agent_receiver);
+    reader.read_agents(drawable_agents, player, coin, player_receiver, agent_receiver, player_walls);
     cout << "Lei objetos" << endl;
     reader.read_competitor(graph, competitor, walls, player, coin, time, drawable_agents);
     cout << "Lei el competidor" << endl;

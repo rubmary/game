@@ -76,3 +76,8 @@ public:
     Kinematic* character;
     virtual Shape* get_shape();
 };
+
+class DrawablePortal : public DrawableObject {
+public:
+    DrawablePortal(float x1, float y1, int size, Color color);
+};

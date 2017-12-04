@@ -34,6 +34,15 @@ DrawableWall::DrawableWall(float x1, float y1, float x2, float y2, Color c) {
     shape = new RectangleShape(make_shape({x1, y1}, {x2, y2}, color));
 }
 
+DrawablePortal::DrawablePortal(float x, float y, int size, Color c) {
+    color = c;
+    shape = new CircleShape(size, 6);
+    shape -> setFillColor(color);
+    visible = new bool(true);
+    Vector2f position = {x, y};
+    shape -> setPosition(position);
+}
+
 bool DrawableWall::is_visible(){
     return true;
 }

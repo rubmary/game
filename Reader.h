@@ -5,6 +5,7 @@ public:
     void read_map(  Graph* &graph,
                     vector <DrawableObject*> &segments,
                     vector<Wall>* &W,
+                    vector<Wall> &player_walls,
                     vector<Color> colors,
                     bool* &show_map );
     
@@ -12,7 +13,8 @@ public:
                         Player* &player,
                         Object* &coin,
                         Object* &player_receiver,
-                        Object* &agent_receiver );
+                        Object* &agent_receiver,
+                        vector <Wall> &player_walls);
 
     void read_competitor(   Graph* &graph,
                             Character* &competitor,
