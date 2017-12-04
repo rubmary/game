@@ -29,6 +29,9 @@ struct Front{
 class Engine{
     Front front;
     Logic logic;
+    vector <string> numbers;
+
+    void make_numbers();
 public:
     Engine( int width,
             int height,
@@ -43,7 +46,8 @@ public:
             Object* agent_receiver,
             vector<Agent*> agents,
             vector<Friend*> friends,
-            Character *competitor);
+            Character *competitor,
+            Character *vigilant);
     /**
      *
      * Iniciar el motor
@@ -55,4 +59,8 @@ public:
      * Manejar el input
      **/
     void input();
+
+
 };
+
+

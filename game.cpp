@@ -24,15 +24,15 @@ int main(){
     double* time;
 
     reader.read_map(graph, objects, walls, player_walls, colors, show_map);
-    cout << "Lei mapa" << endl;
+    // cout << "Lei mapa" << endl;
     reader.read_agents(graph, drawable_agents, player, coin, player_receiver, agent_receiver, player_walls);
-    cout << "Lei objetos" << endl;
+    // cout << "Lei objetos" << endl;
     reader.read_competitor(graph, competitor, walls, player, coin, time, drawable_agents);
-    cout << "Lei el competidor" << endl;
+    // cout << "Lei el competidor" << endl;
     reader.read_vigilant(graph, vigilant, walls, player, coin, time, drawable_agents);
-    cout << "Lei vigilante" << endl;
+    // cout << "Lei vigilante" << endl;
     reader.read_friends(graph, competitor, walls, time, friends, drawable_agents);
-    cout << "Lei amigos" << endl;
+    // cout << "Lei amigos" << endl;
 
     agents.push_back(competitor);
     agents.push_back(vigilant);
@@ -41,13 +41,13 @@ int main(){
 
     for (int i = 0; i < drawable_agents.size(); i++)
         objects.push_back(drawable_agents[i]);
-    cout << "Lei los archivos" << endl;
+    // cout << "Lei los archivos" << endl;
     Engine engine(1320, 720, objects, walls, graph,
                     player, show_map, time, coin,
                     player_receiver, agent_receiver,
-                    agents, friends, competitor);
-    cout << "Cree el engine" << endl;
+                    agents, friends, competitor, vigilant);
+    // cout << "Cree el engine" << endl;
     engine.start();
-    cout << "Sali del engine" << endl;
+    // cout << "Sali del engine" << endl;
     return 0;
 }

@@ -9,10 +9,15 @@ void Front::draw() {
         if(objects[i] -> is_visible())
             window.draw(*(objects[i] -> get_shape()));
     }
-
-    window.display();
 }
 
+void Engine::make_numbers() {
+    numbers.resize(100);
+    for (int i = 0; i < 100; i++)
+        numbers[i] = to_string(i);
+    for (int i = 0; i < 10; i++)
+        numbers[i] = "0" + numbers[i];
+}
 Engine::Engine( int width,
                 int height,
                 vector<DrawableObject*> objects,
@@ -26,7 +31,8 @@ Engine::Engine( int width,
                 Object* agent_receiver,
                 vector<Agent*> agents,
                 vector<Friend*> friends,
-                Character *competitor)
+                Character *competitor,
+                Character *vigilant)
 {
     
     logic.walls  = walls;
@@ -40,10 +46,15 @@ Engine::Engine( int width,
     logic.agents = agents;
     logic.friends = friends;
     logic.competitor = competitor;
+    logic.vigilant   = vigilant;
+    logic.coin_keeper = -1;
+    logic.player_points = 0;
+    logic.competitor_points = 0;
     logic.graph -> calculate_positions();
     logic.graph -> reset_smell();
     logic.graph -> calculate_sections();
     logic.set_shadows();
+    make_numbers();
     front.window.create(VideoMode(width, height),
                         "Game",
                         Style::Default);
@@ -53,12 +64,59 @@ Engine::Engine( int width,
 void Engine::start(){
 
     Clock clock;
-    while (front.window.isOpen()){
+    logic.appear_coin();
+    logic.show_points();
+
+    
+    Font font;
+    font.loadFromFile("FreeMonoBoldOblique.ttf");
+    Text    computer("COMPUTADORA", font),
+            player("JUGADOR", font),
+            resist("SALUD", font);
+
+
+    computer.setPosition({1205, 50});
+    computer.setColor(Color::White);
+    computer.setCharacterSize(15);
+    player.setPosition({1205, 250});
+    player.setColor(Color::White);
+    player.setCharacterSize(15);
+    resist.setPosition({1205, 450});
+    resist.setColor(Color::White);
+    resist.setCharacterSize(15);
+
+    string p = "00", c = "00", r = "30";
+    Text    player_points(p.c_str(), font),
+            computer_points(c.c_str(), font),
+            resist_value(r.c_str(), font);
+
+    computer_points.setPosition({1205, 70});
+    computer_points.setColor(Color::White);
+    computer_points.setCharacterSize(70);
+    player_points.setPosition({1205, 270});
+    player_points.setColor(Color::White);
+    player_points.setCharacterSize(70);
+    resist_value.setPosition({1205, 470});
+    resist_value.setColor(Color::White);
+    resist_value.setCharacterSize(70);
+
+
+    while (front.window.isOpen() && !logic.finish_game()){
         Time dt = clock.restart();
         double time = dt.asSeconds();
         input();
         logic.update(time);
         front.draw();
+        front.window.draw(computer);
+        front.window.draw(player);
+        front.window.draw(resist);
+        computer_points.setString(numbers[logic.competitor_points].c_str());
+        player_points.setString(numbers[logic.player_points].c_str());
+        resist_value.setString(numbers[logic.player_lifes].c_str());
+        front.window.draw(computer_points);
+        front.window.draw(player_points);
+        front.window.draw(resist_value);
+        front.window.display();
     }
 }
 
@@ -91,10 +149,4 @@ void Engine::input(){
 
     if (Keyboard::isKeyPressed(Keyboard::N))
         logic.off_map();
-
-    if (Keyboard::isKeyPressed(Keyboard::C) && !logic.exists_coin())
-        logic.appear_coin();
-
-    if (Keyboard::isKeyPressed(Keyboard::X) &&  logic.exists_coin())
-        logic.disappear_coin();
 }

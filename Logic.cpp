@@ -18,6 +18,8 @@ void Logic::update(double t){
 
     if(make_disappear_coin())
         disappear_coin();
+
+    check_lifes();
 }
 
 void Logic::on_map() {
@@ -59,12 +61,24 @@ bool Logic::make_appear_coin() {
         return false;
 
     if (magnitude(  (player -> character).position -
-                    (player_receiver -> character).position) < 40)
+                    (player_receiver -> character).position) < 40) {
+        if (coin_keeper == 0) {
+            cout << "Sumaste dos puntos mas! Felicitaciones!" << endl;
+            show_points();
+            player_points += 2;
+        }
         return true;
+    }
     
     if (magnitude(  (competitor -> character).position -
-                    (agent_receiver -> character).position) < 40)
+                    (agent_receiver -> character).position) < 40) {
+        if (coin_keeper == 1) {
+            competitor_points += 2;
+            cout << "Tu oponente ha obtenido dos puntos: " << endl;
+            show_points();
+        }
         return true;
+    }
 
     return false;
 
@@ -74,13 +88,38 @@ bool Logic::make_disappear_coin() {
     if (!exists_coin())
         return false;    
     if (magnitude(  (player -> character).position -
-                    (coin -> character).position) < 10)
+                    (coin -> character).position) < 10) {
+        coin_keeper = 0;
+        player_points++;
+        cout << "Sumaste un punto!" << endl;
+        show_points();
         return true;
+    }
     if (magnitude(  (competitor -> character).position -
-                    (coin -> character).position) < 10)
+                    (coin -> character).position) < 10) {
+        coin_keeper = 1;
+        competitor_points++;
+        cout << "Tu oponente obtuvo un punto!" << endl;
+        show_points();
+        show_points();
         return true;
+    }
     return false;
 }
+
+
+void Logic::check_lifes() {
+    if(magnitude(  (player -> character).position -
+                (vigilant -> character).position) < 10) {
+        player_lifes--;
+        if (player_lifes == 0) {
+            player_lifes = 30;
+            player_points = max(0, player_points - 2); 
+            cout << "Perdiste dos puntos :(" << endl;
+        }
+    }
+}
+
 
 void Logic::set_shadows(int section){
     vector <Friend*> section_friends;
@@ -102,4 +141,22 @@ void Logic::set_shadows(int section){
 void Logic::set_shadows(){
     for (int i = 0; i < graph -> total_sections(); i++)
         set_shadows(i);
+}
+
+void Logic::show_points(){
+    cout << "Puntajes actuales: " << endl;
+    cout << "Jugador: " << player_points << endl;
+    cout << "Computadora: " << competitor_points << endl;
+}
+
+bool Logic::finish_game(){
+    if (player_points >= total_points) {
+        cout << "GANASTE!" << endl;
+        return true;
+    }
+    if (competitor_points >= total_points) {
+        cout << "PERDISTE!" << endl;
+        return true;
+    }
+    return false;
 }

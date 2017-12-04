@@ -19,7 +19,7 @@
  **/
 struct Logic {
     Player* player;
-    Character* competitor;
+    Character *competitor, *vigilant;
     Object *coin, *player_receiver, *agent_receiver;
     vector <Agent*> agents;
     vector <Friend*> friends;
@@ -27,7 +27,8 @@ struct Logic {
     Graph *graph;
     bool* show_map;
     double* time;
-    int player_points, competitor_points;
+    int player_points, competitor_points, coin_keeper;
+    int total_points = 10, player_lifes = 30;
 
     /**
      * update - actualizar logica en un intervalo
@@ -97,5 +98,21 @@ struct Logic {
      * Asigna todos los nodos de sombra
      **/
     void set_shadows();
+
+    /**
+     * Muestra los puntajes
+     **/
+    void show_points();
+
+    /**
+     * Indica cuando se termino el juego
+     **/
+    bool finish_game();
+
+    /**
+     * Check lifes
+     **/
+    void check_lifes();
+
 };
 
