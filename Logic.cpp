@@ -48,3 +48,25 @@ void Logic::disappear_coin() {
     (player_receiver -> character).position = graph -> position(player_receiver -> node);
     (agent_receiver  -> character).position = graph -> position(agent_receiver  -> node);
 }
+
+void Logic::set_shadows(int section){
+    vector <Friend*> section_friends;
+    for (int i = 0; i < friends.size(); i++){
+        if (friends[i] -> section == section)
+            section_friends.push_back(friends[i]);
+    }
+    vector <int> shadows = graph -> get_shadows(section);
+
+    int total = shadows.size();
+
+    for (int i = 0; i < section_friends.size(); i++) {
+        if (i%total == 0)
+            random_shuffle(shadows.begin(), shadows.end());
+        section_friends[i] -> shadow_point = graph -> position(shadows[i%total]);
+    }
+}
+
+void Logic::set_shadows(){
+    for (int i = 0; i < graph -> total_sections(); i++)
+        set_shadows(i);
+}

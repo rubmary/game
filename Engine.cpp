@@ -2,7 +2,7 @@
 using namespace std;
 using namespace sf;
 
-void Front::draw(){
+void Front::draw() {
     window.clear(Color::Black);
 
     for (int i = 0; i < objects.size(); i++) {
@@ -24,7 +24,9 @@ Engine::Engine( int width,
                 Object* coin,
                 Object* player_receiver,
                 Object* agent_receiver,
-                vector<Agent*> agents) {
+                vector<Agent*> agents,
+                vector<Friend*> friends)
+{
     
     logic.walls  = walls;
     logic.graph  = graph;
@@ -35,9 +37,20 @@ Engine::Engine( int width,
     logic.player_receiver = player_receiver;
     logic.agent_receiver  = agent_receiver;
     logic.agents = agents;
+    logic.friends = friends;
     logic.graph -> calculate_positions();
     logic.graph -> reset_smell();
     logic.graph -> calculate_sections();
+    logic.set_shadows();
+
+
+    // vector <vector <int>> shadows = logic.graph -> get_shadows();
+    // for (int i = 0; i < shadows.size(); i++) {
+    //     cout << "Seccion " << i << ": ";
+    //     for (int j = 0; j < shadows[i].size(); j++)
+    //         cout << shadows[i][j] << ' ';
+    //     cout << endl;
+    // }
 
     front.window.create(VideoMode(width, height),
                         "Game",

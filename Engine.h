@@ -41,7 +41,8 @@ public:
             Object* coin,
             Object* player_receiver,
             Object* agent_receiver,
-            vector<Agent*> agents);
+            vector<Agent*> agents,
+            vector<Friend*> friends);
     /**
      *
      * Iniciar el motor

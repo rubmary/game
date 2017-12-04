@@ -2,6 +2,12 @@
 
 void Character::update() {
     state_machine.update() -> execute();
+    node    = graph -> node(character.position);
+    section = graph -> section(node);
+}
+
+void Friend::update() {
+    state_machine.update() -> execute();
 }
 
 Player::Player(double x, double y, double z, double s){

@@ -68,16 +68,20 @@ struct NodeRecord {
  * Clase Graph:
  * Representacion del mapa del juego
  * @n:          Numero de nodos
+ * @sections:   Numero total de secciones en el mapa
  * @E:          edges (arcos) del grafo
  * @meshes:     cada triangulo del grafo
  * @positions:  las posiciones de los centroides
  *              de los nodos del grafo
+ * @shadows:    sombras del mapa agrupadas por
+ *              secciones
  **/
 class Graph{
-    int n;
+    int n, sections;
     vector <Edge> E;
     vector <Triangle> meshes;
     vector <Vector3 <double> > positions;
+    vector <vector <int> > shadows;
 
     /**
      *
@@ -261,5 +265,21 @@ public:
      * mapa usando dfs
      **/
     int section(Vector3 <double> position);
+
+    /**
+     *
+     * total_sectios
+     * retorna el numero total de secciones
+     **/
+    int total_sections();
+
+    /**
+     *
+     * get_shadows
+     * retorna las sombras de una
+     * seccion en especifica
+     **/
+    vector <int> get_shadows(int section);
+
 
 };

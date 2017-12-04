@@ -29,4 +29,14 @@ public:
                         Object* &coin,
                         double* &time,
                         vector<DrawableObject*> &drawable_agents);
+
+    void read_friends(  Graph* &graph,
+                        // Character* &vigilant,
+                        Character* &competitor,
+                        vector<Wall>* &walls,
+                        // Player* &player,
+                        // Object* &coin,
+                        double* &time,
+                        vector<Friend*> &friends,
+                        vector<DrawableObject*> &drawable_agents);
 };

@@ -106,7 +106,7 @@ void Reader::read_competitor(   Graph* &graph,
     file >> x >> z >> max_speed;
     (competitor -> character).position = {x, 0, z};
     (competitor -> character).max_speed = max_speed;
-
+    competitor -> graph = graph;
     cout << "Hice competidor" << endl;
     
     // Evitar paredes
@@ -254,7 +254,7 @@ void Reader::read_vigilant( Graph* &graph,
     file >> x >> z >> max_speed;
     (vigilant -> character).position = {x, 0, z};
     (vigilant -> character).max_speed = max_speed;
-
+    vigilant -> graph = graph;
     cout << "Hice vigilante" << endl;
 
     /************************ EVITAR PAREDES **********************/
@@ -473,4 +473,139 @@ void Reader::read_vigilant( Graph* &graph,
     DrawableObject* drawable_agent;
     drawable_agent = new DrawableAgent(vigilant->character, Color::Cyan, size);
     drawable_agents.push_back(drawable_agent);
+}
+
+void Reader::read_friends(    Graph* &graph,
+                                // Character* &vigilant,
+                                Character* &competitor,
+                                vector<Wall>* &walls,
+                                // Player* &player,
+                                // Object* &coin,
+                                double* &time,
+                                vector<Friend*> &friends,
+                                vector<DrawableObject*> &drawable_agents)
+{
+    ifstream file("friends.txt");
+    int N;
+    file >> N;
+    double epsilon;
+    file >> epsilon;
+
+    for (int _ = 0; _ < N; _++) {
+
+        /**************************** FRIEND **************************/
+        Friend* friend_player = new Friend();
+
+        double x, z, max_speed;
+        int section;
+        file >> x >> z >> max_speed >> section;
+        (friend_player -> character).position = {x, 0, z};
+        (friend_player -> character).max_speed = max_speed;
+        friend_player -> section = section;
+
+        /************************ EVITAR PAREDES **********************/
+        // Evitar paredes
+        double lookahead, avoid_distance, max_acc_obstacle;
+        file >> lookahead >> avoid_distance >> max_acc_obstacle;
+        ObstacleAvoidance* obstacle_avoidance = new ObstacleAvoidance();
+        obstacle_avoidance -> lookahead = lookahead;
+        obstacle_avoidance -> avoid_distance = avoid_distance;
+        obstacle_avoidance -> max_acceleration = max_acc_obstacle;
+        (obstacle_avoidance -> collision_detector).walls = walls;
+
+
+        /************************* PERSEGUIR COMPETIDOR ****************/
+        // seek
+        double max_acc_seek;
+        file >> max_acc_seek;
+        Seek *seek = new Seek();
+        seek -> target = &(competitor -> character).position;
+        seek -> max_acceleration = max_acc_seek;
+
+        PrioritySteering *priority_steering_seek = new PrioritySteering();
+        (priority_steering_seek -> behaviours).resize(2);
+        (priority_steering_seek-> behaviours)[0] = obstacle_avoidance;
+        (priority_steering_seek-> behaviours)[1] = seek;
+        priority_steering_seek -> character = &(friend_player -> character);
+        priority_steering_seek -> epsilon   = epsilon;
+
+        /************************* MOVERSE A LA SOMBRA ********************/
+        // follow path
+        double path_offset, max_acc_follow_path;
+        file >> path_offset >> max_acc_follow_path;
+        FollowPath* follow_path = new FollowPath();
+        follow_path -> path_offset = path_offset;
+        follow_path -> max_acceleration = max_acc_follow_path;
+        follow_path -> character = &(friend_player -> character);
+
+        //arrive
+        double max_acc_arrive, max_speed_arrive, target_radius, slow_radius, time_to_target;
+        file >> max_acc_arrive >> max_speed_arrive;
+        file >> target_radius >> slow_radius >> time_to_target;
+        Arrive *arrive = new Arrive();
+        arrive -> target = &(friend_player -> shadow_point);
+        arrive -> max_acceleration = max_acc_arrive;
+        arrive -> max_speed = max_speed_arrive;
+        arrive -> target_radius = target_radius;
+        arrive -> slow_radius = slow_radius;
+        arrive -> time_to_target = time_to_target;
+
+        PrioritySteering *priority_steering_move = new PrioritySteering();
+        (priority_steering_move -> behaviours).resize(3);
+        (priority_steering_move-> behaviours)[0] = obstacle_avoidance;
+        (priority_steering_move-> behaviours)[1] = follow_path;
+        (priority_steering_move-> behaviours)[2] = arrive;
+        priority_steering_move -> character = &(friend_player -> character);
+        priority_steering_move -> epsilon   = epsilon;
+
+        /**************************** ACCIONES DE ESTADOS **********************/
+        // Nada
+        Action* none = new Action();
+
+        //Perseguir al competidor
+        SteeringBehaviorAction *seeking = new SteeringBehaviorAction();
+        seeking -> steering_behavior    = priority_steering_seek;
+        seeking -> time                 = time;
+
+        SteeringBehaviorAction *moving  = new SteeringBehaviorAction();
+        moving -> steering_behavior     = priority_steering_move;
+        moving -> time                  = time;
+
+        /************************ ACCIONES DE TRANSICIONES *****************/
+        FindBestPath* calculate_path = new FindBestPath();
+        calculate_path -> follow_path   = follow_path;
+        calculate_path -> graph         = graph;
+        calculate_path -> target        = &(friend_player -> shadow_point);
+
+        /**************************** CONDICIONES **************************/
+        IntegersMatchCondition *same_section = new IntegersMatchCondition();
+        same_section -> watch1 = &(competitor -> section);
+        same_section -> watch2 = &(friend_player -> section);
+        NotCondition *distinct_section = new NotCondition();
+        distinct_section -> condition = same_section;
+
+
+        BoolCondition* always_true = new BoolCondition();
+        always_true -> condition = new bool(true);
+
+        /********************************* MAQUINA DE ESTADOS **********************/
+        (friend_player -> state_machine).states.resize(3);
+        State &initial_state    = (friend_player -> state_machine).states[0];
+        State &seek_competitor  = (friend_player -> state_machine).states[1];
+        State &move_shadow      = (friend_player -> state_machine).states[2];
+
+
+        (friend_player -> state_machine).initial_state = &initial_state;
+        (friend_player -> state_machine).current_state = &initial_state;
+
+        /****************************** ESTADOS *****************************/
+        initial_state.action    = none;
+        seek_competitor.action  = seeking;
+        move_shadow.action      = moving;
+
+        initial_state.transitions.push_back({&move_shadow, always_true, calculate_path});
+        seek_competitor.transitions.push_back({&move_shadow, distinct_section, calculate_path});
+        move_shadow.transitions.push_back({&seek_competitor, same_section, none});
+    }
+    file.close();
 }

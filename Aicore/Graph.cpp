@@ -310,12 +310,28 @@ void Graph::calculate_sections() {
         if(meshes[i].section == -1)
             dfs(i, section++);
     }
+    sections = section;
 }
 
 int Graph::section(int node) {
     return meshes[node].section;
 }
 
+int Graph::total_sections() {
+    return sections;
+}
+
 int Graph::section(Vector3<double> position) {
     return section(node(position));
+}
+
+vector <int> Graph::get_shadows(int section) {
+    if(shadows.size() == 0) {
+        shadows.resize(sections);
+        for (int i = 0; i < n; i++) {
+            if (get_neighbors(i).size() == 1)
+                shadows[meshes[i].section].push_back(i);
+        }
+    }
+    return shadows[section];
 }

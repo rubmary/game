@@ -37,7 +37,22 @@ public:
 class Character : public Agent {
 public:
     StateMachine state_machine;
+    int node, section;
+    Graph* graph;
     void virtual update();
+};
+
+/**
+ *
+ * Clase Friend
+ * Representan los amigos del
+ * jugador
+ *
+ **/
+class Friend : public Character {
+public:
+    Vector3<double> shadow_point;
+    virtual void update();
 };
 
 /**

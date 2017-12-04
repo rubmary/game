@@ -16,6 +16,7 @@ int main(){
     vector <Wall> *walls;
     vector <DrawableObject*> objects, drawable_agents;
     vector <Agent*> agents;
+    vector <Friend*> friends;
     Player* player;
     Character *competitor, *vigilant;
     Object *coin, *player_receiver, *agent_receiver;
@@ -40,7 +41,7 @@ int main(){
     Engine engine(1320, 720, objects, walls, graph,
                     player, show_map, time, coin,
                     player_receiver, agent_receiver,
-                    agents);
+                    agents, friends);
     cout << "Cree el engine" << endl;
     engine.start();
     cout << "Sali del engine" << endl;
