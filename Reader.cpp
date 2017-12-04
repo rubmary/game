@@ -45,12 +45,13 @@ void Reader::read_map ( Graph* &graph,
     file.close();
 }
 
-void Reader::read_agents(vector <DrawableObject*> &drawable_agents,
-                         Player*    &player,
-                         Object*    &coin,
-                         Object*    &player_receiver,
-                         Object*    &agent_receiver,
-                         vector <Wall> &player_walls)
+void Reader::read_agents(   Graph* &graph,
+                            vector <DrawableObject*> &drawable_agents,
+                            Player*    &player,
+                            Object*    &coin,
+                            Object*    &player_receiver,
+                            Object*    &agent_receiver,
+                            vector <Wall> &player_walls)
 {
     int N;
     ifstream file("Agents.txt");
@@ -86,6 +87,7 @@ void Reader::read_agents(vector <DrawableObject*> &drawable_agents,
             }
             for (int i = 0; i < N; i++)
                 file >> (player -> permutation)[i];
+            player -> graph = graph;
         }else if(type == 1) {
             file >> size;
             coin = new Object();
@@ -267,7 +269,7 @@ void Reader::read_vigilant( Graph* &graph,
     (vigilant -> character).position = {x, 0, z};
     (vigilant -> character).max_speed = max_speed;
     vigilant -> graph = graph;
-    
+
     /************************ EVITAR PAREDES **********************/
     // Evitar paredes
     double lookahead, avoid_distance, max_acc_obstacle;
@@ -426,10 +428,18 @@ void Reader::read_vigilant( Graph* &graph,
 
     double lookahead_follow_player;
     file >> lookahead_follow_player;
-    SeeTargetCondition* see_player  = new SeeTargetCondition();
-    see_player -> character     = &(vigilant -> character);
-    see_player -> target        = &(player -> character).position;
-    see_player -> lookahead     = new double (lookahead_follow_player);
+    SeeTargetCondition* near_player  = new SeeTargetCondition();
+    near_player -> character     = &(vigilant -> character);
+    near_player -> target        = &(player -> character).position;
+    near_player -> lookahead     = new double (lookahead_follow_player);
+
+    IntegersMatchCondition* same_section = new IntegersMatchCondition();
+    same_section -> watch1 = &(player -> section);
+    same_section -> watch2 = &(vigilant -> section);
+
+    AndCondition* see_player = new AndCondition();
+    see_player -> condition1 = near_player;
+    see_player -> condition2 = same_section;
 
     NotCondition* no_see_player = new NotCondition();
     no_see_player -> condition = see_player;

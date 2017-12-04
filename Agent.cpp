@@ -79,4 +79,6 @@ void Player::update(double time) {
     int portal = exit_portal(character.position);
     if (portal != -1)
         character.position = entry_portals[permutation[portal]];
+    node    = graph -> node(character.position);
+    section = graph -> section(node);
 }

@@ -82,6 +82,8 @@ class Player : public Agent {
     int exit_portal(Vector3 <double> position);
 
 public:
+    int node, section;
+    Graph* graph;
     vector <Vector3 <double> > entry_portals, exit_portals;
     vector <int> permutation;
     

@@ -25,7 +25,7 @@ int main(){
 
     reader.read_map(graph, objects, walls, player_walls, colors, show_map);
     cout << "Lei mapa" << endl;
-    reader.read_agents(drawable_agents, player, coin, player_receiver, agent_receiver, player_walls);
+    reader.read_agents(graph, drawable_agents, player, coin, player_receiver, agent_receiver, player_walls);
     cout << "Lei objetos" << endl;
     reader.read_competitor(graph, competitor, walls, player, coin, time, drawable_agents);
     cout << "Lei el competidor" << endl;

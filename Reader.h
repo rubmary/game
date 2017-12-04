@@ -9,7 +9,8 @@ public:
                     vector<Color> colors,
                     bool* &show_map );
     
-    void read_agents(   vector <DrawableObject*> &drawable_edges,
+    void read_agents(   Graph* &graph,
+                        vector <DrawableObject*> &drawable_edges,
                         Player* &player,
                         Object* &coin,
                         Object* &player_receiver,
