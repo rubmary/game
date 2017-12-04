@@ -13,6 +13,11 @@ void Logic::update(double t){
     else
         source = -1;
     graph -> update_smell(source, smell_value);
+    if(make_appear_coin())
+        appear_coin();
+
+    if(make_disappear_coin())
+        disappear_coin();
 }
 
 void Logic::on_map() {
@@ -47,6 +52,34 @@ void Logic::disappear_coin() {
     agent_receiver  -> node = choose_position();
     (player_receiver -> character).position = graph -> position(player_receiver -> node);
     (agent_receiver  -> character).position = graph -> position(agent_receiver  -> node);
+}
+
+bool Logic::make_appear_coin() {
+    if (exists_coin())
+        return false;
+
+    if (magnitude(  (player -> character).position -
+                    (player_receiver -> character).position) < 40)
+        return true;
+    
+    if (magnitude(  (competitor -> character).position -
+                    (agent_receiver -> character).position) < 40)
+        return true;
+
+    return false;
+
+}
+
+bool Logic::make_disappear_coin() {
+    if (!exists_coin())
+        return false;    
+    if (magnitude(  (player -> character).position -
+                    (coin -> character).position) < 10)
+        return true;
+    if (magnitude(  (competitor -> character).position -
+                    (coin -> character).position) < 10)
+        return true;
+    return false;
 }
 
 void Logic::set_shadows(int section){

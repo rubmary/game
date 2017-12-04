@@ -19,6 +19,7 @@
  **/
 struct Logic {
     Player* player;
+    Character* competitor;
     Object *coin, *player_receiver, *agent_receiver;
     vector <Agent*> agents;
     vector <Friend*> friends;
@@ -26,6 +27,7 @@ struct Logic {
     Graph *graph;
     bool* show_map;
     double* time;
+    int player_points, competitor_points;
 
     /**
      * update - actualizar logica en un intervalo
@@ -72,6 +74,17 @@ struct Logic {
      * hacer desaparecer la moneda
      **/
     void disappear_coin();
+
+
+    /**
+     * make_appear_coin
+     **/
+    bool make_appear_coin();
+
+    /**
+     * make_disappear_coin
+     **/
+    bool make_disappear_coin();
 
     /**
      * set_shadows

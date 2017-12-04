@@ -25,7 +25,8 @@ Engine::Engine( int width,
                 Object* player_receiver,
                 Object* agent_receiver,
                 vector<Agent*> agents,
-                vector<Friend*> friends)
+                vector<Friend*> friends,
+                Character *competitor)
 {
     
     logic.walls  = walls;
@@ -38,6 +39,7 @@ Engine::Engine( int width,
     logic.agent_receiver  = agent_receiver;
     logic.agents = agents;
     logic.friends = friends;
+    logic.competitor = competitor;
     logic.graph -> calculate_positions();
     logic.graph -> reset_smell();
     logic.graph -> calculate_sections();

@@ -45,7 +45,7 @@ int main(){
     Engine engine(1320, 720, objects, walls, graph,
                     player, show_map, time, coin,
                     player_receiver, agent_receiver,
-                    agents, friends);
+                    agents, friends, competitor);
     cout << "Cree el engine" << endl;
     engine.start();
     cout << "Sali del engine" << endl;
