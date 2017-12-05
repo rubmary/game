@@ -118,6 +118,14 @@ void Logic::check_lifes() {
             cout << "Perdiste dos puntos :(" << endl;
         }
     }
+    if (competitor_loose_life()){
+        competitor_lifes--;
+        if (competitor_lifes == 0) {
+            competitor_lifes = 30;
+            competitor_points = max(0, competitor_points - 2);
+            cout << "La computadora perdio dos puntos" << endl;
+        }
+    }
 }
 
 
@@ -157,6 +165,15 @@ bool Logic::finish_game(){
     if (competitor_points >= total_points) {
         cout << "PERDISTE!" << endl;
         return true;
+    }
+    return false;
+}
+
+bool Logic::competitor_loose_life(){
+    for (int i = 0; i < friends.size(); i++){
+        if (magnitude(  (competitor->character).position -
+                        (friends[i]->character).position) < 12)
+            return true;
     }
     return false;
 }

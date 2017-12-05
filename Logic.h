@@ -28,7 +28,7 @@ struct Logic {
     bool* show_map;
     double* time;
     int player_points, competitor_points, coin_keeper;
-    int total_points = 10, player_lifes = 30;
+    int total_points = 10, player_lifes = 30, competitor_lifes = 30;
 
     /**
      * update - actualizar logica en un intervalo
@@ -113,6 +113,12 @@ struct Logic {
      * Check lifes
      **/
     void check_lifes();
+
+    /**
+     * competitor_loose_life
+     * Check if competitor loose life
+     **/
+    bool competitor_loose_life();
 
 };
 

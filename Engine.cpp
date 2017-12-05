@@ -72,33 +72,41 @@ void Engine::start(){
     font.loadFromFile("FreeMonoBoldOblique.ttf");
     Text    computer("COMPUTADORA", font),
             player("JUGADOR", font),
-            resist("SALUD", font);
+            resist("SALUD JUGADOR", font),
+            resist_computer("SALUD COMPUTADORA", font);
 
 
-    computer.setPosition({1205, 50});
+    computer.setPosition({1205, 30});
     computer.setColor(Color::White);
     computer.setCharacterSize(15);
-    player.setPosition({1205, 250});
+    player.setPosition({1205, 200});
     player.setColor(Color::White);
     player.setCharacterSize(15);
-    resist.setPosition({1205, 450});
+    resist.setPosition({1205, 370});
     resist.setColor(Color::White);
-    resist.setCharacterSize(15);
+    resist.setCharacterSize(10);
+    resist_computer.setPosition({1205, 540});
+    resist_computer.setColor(Color::White);
+    resist_computer.setCharacterSize(10);
 
-    string p = "00", c = "00", r = "30";
+    string p = "00", c = "00", r = "30", rc = "30";
     Text    player_points(p.c_str(), font),
             computer_points(c.c_str(), font),
-            resist_value(r.c_str(), font);
+            resist_value(r.c_str(), font),
+            resist_comp_valu(rc.c_str(), font);
 
-    computer_points.setPosition({1205, 70});
+    computer_points.setPosition({1205, 50});
     computer_points.setColor(Color::White);
     computer_points.setCharacterSize(70);
-    player_points.setPosition({1205, 270});
+    player_points.setPosition({1205, 220});
     player_points.setColor(Color::White);
     player_points.setCharacterSize(70);
-    resist_value.setPosition({1205, 470});
+    resist_value.setPosition({1205, 390});
     resist_value.setColor(Color::White);
     resist_value.setCharacterSize(70);
+    resist_comp_valu.setPosition({1205, 560});
+    resist_comp_valu.setCharacterSize(70);
+    resist_comp_valu.setColor(Color::White);
 
 
     while (front.window.isOpen() && !logic.finish_game()){
@@ -110,14 +118,20 @@ void Engine::start(){
         front.window.draw(computer);
         front.window.draw(player);
         front.window.draw(resist);
+        front.window.draw(resist_computer);
         computer_points.setString(numbers[logic.competitor_points].c_str());
         player_points.setString(numbers[logic.player_points].c_str());
         resist_value.setString(numbers[logic.player_lifes].c_str());
+        resist_comp_valu.setString(numbers[logic.competitor_lifes].c_str());
         front.window.draw(computer_points);
         front.window.draw(player_points);
         front.window.draw(resist_value);
+        front.window.draw(resist_comp_valu);
         front.window.display();
     }
+    while (front.window.isOpen())
+        if(Keyboard::isKeyPressed(Keyboard::Escape))
+            front.window.close();
 }
 
 void Engine::input(){
