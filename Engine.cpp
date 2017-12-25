@@ -2,7 +2,8 @@
 using namespace std;
 using namespace sf;
 
-void Front::draw() {
+void Front::draw()
+{
     window.clear(Color::Black);
 
     for (int i = 0; i < objects.size(); i++) {
@@ -11,13 +12,30 @@ void Front::draw() {
     }
 }
 
-void Engine::make_numbers() {
+void Front::make_numbers()
+{
     numbers.resize(100);
     for (int i = 0; i < 100; i++)
         numbers[i] = to_string(i);
     for (int i = 0; i < 10; i++)
         numbers[i] = "0" + numbers[i];
 }
+
+Text* Front::make_text( float x,
+                        float y,
+                        int size,
+                        string txt,
+                        Color color)
+{
+    Font font;
+    font.loadFromFile("FreeMonoBoldOblique.ttf");
+    Text* text = new Text(txt.c_str(), font);
+    text -> setPosition({x, y});
+    text -> setCharacterSize(size);
+    text -> setColor(color);
+    return text;
+}
+
 Engine::Engine( int width,
                 int height,
                 vector<DrawableObject*> objects,
@@ -54,7 +72,7 @@ Engine::Engine( int width,
     logic.graph -> reset_smell();
     logic.graph -> calculate_sections();
     logic.set_shadows();
-    make_numbers();
+    front.make_numbers();
     front.window.create(VideoMode(width, height),
                         "Game",
                         Style::Default);
@@ -119,10 +137,10 @@ void Engine::start(){
         front.window.draw(player);
         front.window.draw(resist);
         front.window.draw(resist_computer);
-        computer_points.setString(numbers[logic.competitor_points].c_str());
-        player_points.setString(numbers[logic.player_points].c_str());
-        resist_value.setString(numbers[logic.player_lifes].c_str());
-        resist_comp_valu.setString(numbers[logic.competitor_lifes].c_str());
+        computer_points.setString(front.numbers[logic.competitor_points].c_str());
+        player_points.setString(front.numbers[logic.player_points].c_str());
+        resist_value.setString(front.numbers[logic.player_lifes].c_str());
+        resist_comp_valu.setString(front.numbers[logic.competitor_lifes].c_str());
         front.window.draw(computer_points);
         front.window.draw(player_points);
         front.window.draw(resist_value);

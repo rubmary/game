@@ -10,6 +10,8 @@
 struct Front{
     RenderWindow window;
     vector <DrawableObject*> objects;
+    vector <string> numbers;
+
     
     /**
      *
@@ -18,6 +20,26 @@ struct Front{
      * en el campo
      **/
     void draw();
+
+    /**
+     *
+     * make_numbers
+     * Crea el vector de string de numeros
+     * para mostrar los puntajes
+     **/
+    void make_numbers();
+
+    /**
+     *
+     * make_text
+     * Crea un objeto texto
+     **/
+
+    Text* make_text(float x,
+                    float y,
+                    int size,
+                    string txt,
+                    Color color);
 };
 
 
@@ -29,9 +51,6 @@ struct Front{
 class Engine{
     Front front;
     Logic logic;
-    vector <string> numbers;
-
-    void make_numbers();
 public:
     Engine( int width,
             int height,
