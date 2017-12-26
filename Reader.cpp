@@ -11,7 +11,7 @@ void Reader::read_map ( Graph* &graph,
     
     show_map = new bool;
     int N, ratio;
-    ifstream file("MAP.txt");
+    ifstream file("Input/MAP.txt");
     file >> N >> ratio;
     int x1, y1, x2, y2, c;
     segments.clear();
@@ -54,7 +54,7 @@ void Reader::read_agents(   Graph* &graph,
                             vector <Wall> &player_walls)
 {
     int N;
-    ifstream file("Agents.txt");
+    ifstream file("Input/Agents.txt");
     file >> N;
     for(int i = 0; i < N; i++) {
         int type;
@@ -121,7 +121,7 @@ void Reader::read_competitor(   Graph* &graph,
                                 vector<DrawableObject*> &drawable_agents)
 {
     
-    ifstream file("competitor.txt");
+    ifstream file("Input/competitor.txt");
     time = new double();
     double epsilon;
     file >> epsilon;
@@ -258,7 +258,7 @@ void Reader::read_vigilant( Graph* &graph,
                             double* &time,
                             vector<DrawableObject*> &drawable_agents)
 {
-    ifstream file("vigilant.txt");
+    ifstream file("Input/vigilant.txt");
     double epsilon;
     file >> epsilon;
 
@@ -491,7 +491,7 @@ void Reader::read_friends(    Graph* &graph,
                                 vector<Friend*> &friends,
                                 vector<DrawableObject*> &drawable_agents)
 {
-    ifstream file("friends.txt");
+    ifstream file("Input/friends.txt");
     int N;
     file >> N;
     double epsilon;
