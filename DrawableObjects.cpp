@@ -21,7 +21,7 @@ RectangleShape make_shape(const Vector2f &A, const Vector2f &B, Color color) {
 }
 
 
-Shape* DrawableObject::get_shape(){
+Drawable* DrawableObject::get_shape(){
     return shape;
 }
 
@@ -61,8 +61,21 @@ DrawableAgent::DrawableAgent(Kinematic &chart, Color c, int size) {
     get_shape();
 }
 
-Shape* DrawableAgent::get_shape(){
+Shape* DrawableAgent::get_shape() {
     Vector2f position = {(float) (character -> position).x, (float) (character -> position).z};
     shape -> setPosition(position);
     return shape;
+}
+
+DrawableText::DrawableText(float x, float y, int size, string txt, Color c, Font &font) {
+    color = c;
+    text = new Text(txt.c_str(), font);
+    text -> setPosition({x, y});
+    text -> setCharacterSize(size);
+    text -> setColor(color);
+    visible = new bool(true);
+}
+
+Drawable* DrawableText::get_shape() {
+    return text;
 }

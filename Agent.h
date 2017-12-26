@@ -80,7 +80,6 @@ class Player : public Agent {
      * Portal de salida
      **/
     int exit_portal(Vector3 <double> position);
-
 public:
     int node, section;
     Graph* graph;

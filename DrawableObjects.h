@@ -27,7 +27,7 @@ public:
      * ser mostrada en la pantalla
      *
      **/
-    virtual Shape* get_shape();
+    virtual Drawable* get_shape();
 
     /**
      *
@@ -80,4 +80,11 @@ public:
 class DrawablePortal : public DrawableObject {
 public:
     DrawablePortal(float x1, float y1, int size, Color color);
+};
+
+class DrawableText : public DrawableObject {
+    Text* text;
+public:
+    DrawableText(float x, float y, int size, string txt, Color color, Font &font);
+    virtual Drawable* get_shape();
 };

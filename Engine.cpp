@@ -21,19 +21,22 @@ void Front::make_numbers()
         numbers[i] = "0" + numbers[i];
 }
 
-Text* Front::make_text( float x,
-                        float y,
-                        int size,
-                        string txt,
-                        Color color)
+vector <DrawableObject*> Front::make_texts ()
 {
-    Font font;
+    make_numbers();
+    vector <DrawableObject*> texts;
+    Color c = Color::White;
     font.loadFromFile("FreeMonoBoldOblique.ttf");
-    Text* text = new Text(txt.c_str(), font);
-    text -> setPosition({x, y});
-    text -> setCharacterSize(size);
-    text -> setColor(color);
-    return text;
+    DrawableText *computer, *player, *resist, *resist_computer;
+    computer        = new DrawableText(1205, 30,  15, "COMPUTADORA",    c, font);
+    player          = new DrawableText(1205, 200, 15, "JUGADOR",        c, font);
+    resist          = new DrawableText(1205, 370, 10, "SALUD",          c, font);
+    resist_computer = new DrawableText(1205, 540, 10, "SALUD COMPUTADORA", c, font);
+    texts.push_back(computer);
+    texts.push_back(player);
+    texts.push_back(resist);
+    texts.push_back(resist_computer);
+    return texts;
 }
 
 Engine::Engine( int width,
@@ -72,7 +75,11 @@ Engine::Engine( int width,
     logic.graph -> reset_smell();
     logic.graph -> calculate_sections();
     logic.set_shadows();
-    front.make_numbers();
+
+    vector <DrawableObject*> texts = front.make_texts();
+    for (int i = 0; i < texts.size(); i++)
+        objects.push_back(texts[i]);
+
     front.window.create(VideoMode(width, height),
                         "Game",
                         Style::Default);
@@ -88,25 +95,6 @@ void Engine::start(){
     
     Font font;
     font.loadFromFile("FreeMonoBoldOblique.ttf");
-    Text    computer("COMPUTADORA", font),
-            player("JUGADOR", font),
-            resist("SALUD JUGADOR", font),
-            resist_computer("SALUD COMPUTADORA", font);
-
-
-    computer.setPosition({1205, 30});
-    computer.setColor(Color::White);
-    computer.setCharacterSize(15);
-    player.setPosition({1205, 200});
-    player.setColor(Color::White);
-    player.setCharacterSize(15);
-    resist.setPosition({1205, 370});
-    resist.setColor(Color::White);
-    resist.setCharacterSize(10);
-    resist_computer.setPosition({1205, 540});
-    resist_computer.setColor(Color::White);
-    resist_computer.setCharacterSize(10);
-
     string p = "00", c = "00", r = "30", rc = "30";
     Text    player_points(p.c_str(), font),
             computer_points(c.c_str(), font),
@@ -126,17 +114,12 @@ void Engine::start(){
     resist_comp_valu.setCharacterSize(70);
     resist_comp_valu.setColor(Color::White);
 
-
     while (front.window.isOpen() && !logic.finish_game()){
         Time dt = clock.restart();
         double time = dt.asSeconds();
         input();
         logic.update(time);
         front.draw();
-        front.window.draw(computer);
-        front.window.draw(player);
-        front.window.draw(resist);
-        front.window.draw(resist_computer);
         computer_points.setString(front.numbers[logic.competitor_points].c_str());
         player_points.setString(front.numbers[logic.player_points].c_str());
         resist_value.setString(front.numbers[logic.player_lifes].c_str());

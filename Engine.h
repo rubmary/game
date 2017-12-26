@@ -11,6 +11,7 @@ struct Front{
     RenderWindow window;
     vector <DrawableObject*> objects;
     vector <string> numbers;
+    Font font;
 
     
     /**
@@ -34,12 +35,20 @@ struct Front{
      * make_text
      * Crea un objeto texto
      **/
+    // Text* make_text(float x,
+    //                 float y,
+    //                 int size,
+    //                 string txt,
+    //                 Color color);
 
-    Text* make_text(float x,
-                    float y,
-                    int size,
-                    string txt,
-                    Color color);
+    /**
+     *
+     * make_texts
+     * Crea los textos de puntaje
+     * que seran mostrados en la parte
+     * lateral de la pantalla
+     **/
+    vector <DrawableObject*> make_texts();
 };
 
 
