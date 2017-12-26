@@ -79,3 +79,22 @@ DrawableText::DrawableText(float x, float y, int size, string txt, Color c, Font
 Drawable* DrawableText::get_shape() {
     return text;
 }
+
+DrawableNumber::DrawableNumber( float x,
+                                float y,
+                                int size,
+                                string txt,
+                                Color c,
+                                Font &font,
+                                vector <string> &numbers,
+                                int &score) :
+                                DrawableText(x, y, size, txt, c, font),
+                                score(&score),
+                                numbers(&numbers)
+{
+}
+
+Drawable* DrawableNumber::get_shape() {
+    text -> setString(((*numbers)[*score]).c_str());
+    return DrawableText::get_shape();
+}

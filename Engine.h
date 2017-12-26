@@ -48,7 +48,10 @@ struct Front{
      * que seran mostrados en la parte
      * lateral de la pantalla
      **/
-    vector <DrawableObject*> make_texts();
+    vector <DrawableObject*> make_texts (   int &cp_score,
+                                            int &py_score,
+                                            int &rc_score,
+                                            int &rp_score);
 };
 
 

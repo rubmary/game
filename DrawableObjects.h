@@ -83,8 +83,24 @@ public:
 };
 
 class DrawableText : public DrawableObject {
-    Text* text;
 public:
+    Text* text;
     DrawableText(float x, float y, int size, string txt, Color color, Font &font);
+    virtual Drawable* get_shape();
+};
+
+class DrawableNumber : public DrawableText {
+public:
+    int *score;
+    vector <string> *numbers;
+    DrawableNumber(
+        float x,
+        float y,
+        int size,
+        string txt,
+        Color c,
+        Font &font,
+        vector <string> &numbers,
+        int &score);
     virtual Drawable* get_shape();
 };

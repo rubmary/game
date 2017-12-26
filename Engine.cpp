@@ -10,6 +10,7 @@ void Front::draw()
         if(objects[i] -> is_visible())
             window.draw(*(objects[i] -> get_shape()));
     }
+    window.display();
 }
 
 void Front::make_numbers()
@@ -21,7 +22,10 @@ void Front::make_numbers()
         numbers[i] = "0" + numbers[i];
 }
 
-vector <DrawableObject*> Front::make_texts ()
+vector <DrawableObject*> Front::make_texts (int &cp_score,
+                                            int &py_score,
+                                            int &rc_score,
+                                            int &rp_score)
 {
     make_numbers();
     vector <DrawableObject*> texts;
@@ -36,6 +40,16 @@ vector <DrawableObject*> Front::make_texts ()
     texts.push_back(player);
     texts.push_back(resist);
     texts.push_back(resist_computer);
+
+    DrawableNumber *computer_points, *player_points, *resist_value, *resist_comp_val;
+    computer_points = new DrawableNumber(1205, 50,  70, "00", c, font, numbers, cp_score);
+    player_points   = new DrawableNumber(1205, 220, 70, "00", c, font, numbers, py_score);
+    resist_comp_val = new DrawableNumber(1205, 560, 70, "30", c, font, numbers, rc_score);
+    resist_value    = new DrawableNumber(1205, 390, 70, "30", c, font, numbers, rp_score);
+    texts.push_back(computer_points);
+    texts.push_back(player_points);
+    texts.push_back(resist_comp_val);
+    texts.push_back(resist_value);
     return texts;
 }
 
@@ -76,7 +90,12 @@ Engine::Engine( int width,
     logic.graph -> calculate_sections();
     logic.set_shadows();
 
-    vector <DrawableObject*> texts = front.make_texts();
+    vector <DrawableObject*> texts;
+    texts = front.make_texts(   logic.competitor_points,
+                                logic.player_points,
+                                logic.competitor_lifes,
+                                logic.player_lifes);
+
     for (int i = 0; i < texts.size(); i++)
         objects.push_back(texts[i]);
 
@@ -91,44 +110,12 @@ void Engine::start(){
     Clock clock;
     logic.appear_coin();
     logic.show_points();
-
-    
-    Font font;
-    font.loadFromFile("FreeMonoBoldOblique.ttf");
-    string p = "00", c = "00", r = "30", rc = "30";
-    Text    player_points(p.c_str(), font),
-            computer_points(c.c_str(), font),
-            resist_value(r.c_str(), font),
-            resist_comp_valu(rc.c_str(), font);
-
-    computer_points.setPosition({1205, 50});
-    computer_points.setColor(Color::White);
-    computer_points.setCharacterSize(70);
-    player_points.setPosition({1205, 220});
-    player_points.setColor(Color::White);
-    player_points.setCharacterSize(70);
-    resist_value.setPosition({1205, 390});
-    resist_value.setColor(Color::White);
-    resist_value.setCharacterSize(70);
-    resist_comp_valu.setPosition({1205, 560});
-    resist_comp_valu.setCharacterSize(70);
-    resist_comp_valu.setColor(Color::White);
-
     while (front.window.isOpen() && !logic.finish_game()){
         Time dt = clock.restart();
         double time = dt.asSeconds();
         input();
         logic.update(time);
         front.draw();
-        computer_points.setString(front.numbers[logic.competitor_points].c_str());
-        player_points.setString(front.numbers[logic.player_points].c_str());
-        resist_value.setString(front.numbers[logic.player_lifes].c_str());
-        resist_comp_valu.setString(front.numbers[logic.competitor_lifes].c_str());
-        front.window.draw(computer_points);
-        front.window.draw(player_points);
-        front.window.draw(resist_value);
-        front.window.draw(resist_comp_valu);
-        front.window.display();
     }
     while (front.window.isOpen())
         if(Keyboard::isKeyPressed(Keyboard::Escape))
