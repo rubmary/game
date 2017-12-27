@@ -1,4 +1,4 @@
-#include "Engine.cpp"
+#include "Engine/Engine.cpp"
 using namespace std;
 
 int main(){
@@ -30,6 +30,7 @@ int main(){
     reader.read_friends(graph, competitor, walls, time, friends, drawable_agents);
     agents.push_back(competitor);
     agents.push_back(vigilant);
+    
     for (int i = 0; i < friends.size(); i++)
         agents.push_back(friends[i]);
 

@@ -1,4 +1,10 @@
-#include "include.h"
+#include "Logic.cpp"
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/Window.hpp>
+#include <iostream>
+#include <algorithm>
+#include <fstream>
 
 bool operator < (const Vector2f &A, const Vector2f &B);
 RectangleShape make_shape(const Vector2f &A, const Vector2f &B, Color color);
